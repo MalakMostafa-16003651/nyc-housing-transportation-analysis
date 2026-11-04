@@ -40,3 +40,5 @@ Across 143 ZIP codes (2022–2026) there is a moderate, positive and statistical
 ![RQ2](rq2_borough_grouped_bar.png)
 
 Brooklyn leads both: 37,365 affordable units (33.2% of NYC) and 2,257 serious crashes (38.4%). The Bronx builds almost as much housing (36,451, 32.3%) but has a much smaller crash share (24.0%). Brooklyn and Queens have a higher share of crashes than of housing, Manhattan is balanced, and Staten Island is low on both. Raw totals favour larger boroughs; per-capita figures would be a fairer comparison.
+
+**Data notes:** `df_integrated` has no missing values, so nothing was filled with 0. Totals cover 2022–2026, where 2026 is a partial year and 2022 also appears partial (339 serious crashes vs ~1,550–1,850 in each full year), so totals should not be read as five full years.
