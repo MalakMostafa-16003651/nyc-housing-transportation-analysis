@@ -1,2 +1,2 @@
-Put Person 3's merged file here as `df_integrated.csv`.
-While it is missing, the website automatically uses dummy data.
+The website reads `df_integrated.csv` from this folder or from the repository root.
+If neither exists it falls back to dummy data.

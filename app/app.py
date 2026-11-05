@@ -4,7 +4,7 @@ Housing Growth and Road Safety in New York City - interactive website (Dash).
 Run locally:    python app/app.py   then open http://127.0.0.1:8050
 Run on Render:  gunicorn --chdir app app:server
 
-Owner: Member 4 (website). Each member's charts live in app/charts/memberN.py.
+Visualizations live in app/charts/ and are listed in app/charts/__init__.py.
 """
 
 import re
@@ -32,15 +32,20 @@ BOROUGH_ALIASES = {
     "manhattan": "Manhattan", "brooklyn": "Brooklyn", "queens": "Queens",
     "bronx": "Bronx", "staten island": "Staten Island", "staten": "Staten Island",
 }
+# Checked in order, so more specific phrases come first
 HOUSING_KEYWORDS = {
-    "new construction": "New construction", "new": "New construction",
-    "construction": "New construction", "preservation": "Preservation",
-    "preserved": "Preservation",
+    "total units": "Total housing units", "total housing": "Total housing units",
+    "affordable": "Affordable units", "units": "Affordable units",
+    "buildings": "Housing buildings", "building": "Housing buildings",
+    "projects": "Housing projects", "project": "Housing projects",
 }
 TRANSPORT_KEYWORDS = {
-    "pedestrian": "Pedestrian", "pedestrians": "Pedestrian", "walking": "Pedestrian",
-    "cyclist": "Cyclist", "cyclists": "Cyclist", "bike": "Cyclist", "bicycle": "Cyclist",
-    "motorist": "Motorist", "motorists": "Motorist", "driver": "Motorist", "car": "Motorist",
+    "non-severe": "Non-severe injuries", "non severe": "Non-severe injuries",
+    "minor": "Non-severe injuries",
+    "severe": "Severe injuries", "injuries": "Severe injuries", "injury": "Severe injuries",
+    "fatalities": "Fatalities", "fatality": "Fatalities", "deaths": "Fatalities",
+    "fatal": "Fatalities",
+    "crashes": "Serious crashes", "crash": "Serious crashes",
 }
 
 GRAPH_CONFIG = {"displaylogo": False, "responsive": True}
@@ -72,7 +77,7 @@ app.layout = html.Div(className="page", children=[
         html.H2("Search"),
         html.Div(className="search-row", children=[
             dcc.Input(id="search-input", type="text", debounce=False,
-                      placeholder='Try "Brooklyn 2019 2023 pedestrian" or "11201 new construction"',
+                      placeholder='Try "Brooklyn 2023 2025 severe" or "11212 affordable fatalities"',
                       className="search-input"),
             html.Button("Search", id="search-btn", n_clicks=0, className="btn btn-secondary"),
         ]),
@@ -111,19 +116,17 @@ app.layout = html.Div(className="page", children=[
         html.Div(id="charts-grid", className="charts-grid"),
     ]),
 
-    # Story section (Person 5 writes the final text)
+    # Story section
     html.Section(className="card story", children=[
         html.H2("The story"),
         html.H3("Question"),
-        html.P("TODO (Person 5): the main question the project answers."),
+        html.P("Content coming soon."),
         html.H3("Key findings"),
-        html.P("TODO (Person 5): 3-5 findings from the charts above. "
-               "Describe associations only - do not claim causation."),
+        html.P("Content coming soon."),
         html.H3("Limitations"),
-        html.P("TODO (Person 5): e.g. ZIP-level aggregation, data coverage, "
-               "SIRTA only covers serious injuries, correlation is not causation."),
+        html.P("Content coming soon."),
         html.H3("Why it matters for NYC"),
-        html.P("TODO (Person 5): who could use these insights and how."),
+        html.P("Content coming soon."),
     ]),
 
     html.Footer("ICS503 Data Engineering and Visualization - Winter 2026",
@@ -156,13 +159,14 @@ def parse_search(text):
     if years:
         found["years"] = [min(years), max(years)]
 
-    for word, category in HOUSING_KEYWORDS.items():
-        if re.search(r"\b" + word + r"\b", text):
-            found["housing"] = category
-            break
+    # Phrases are checked in order, so "non-severe" is matched before "severe"
     for word, category in TRANSPORT_KEYWORDS.items():
-        if re.search(r"\b" + word + r"\b", text):
+        if re.search(r"\b" + re.escape(word) + r"\b", text):
             found["transport"] = category
+            break
+    for word, category in HOUSING_KEYWORDS.items():
+        if re.search(r"\b" + re.escape(word) + r"\b", text):
+            found["housing"] = category
             break
     return found
 
@@ -185,8 +189,9 @@ def apply_search(_clicks, _submit, text, trigger):
     found = parse_search(text)
     if not found:
         return (dash.no_update,) * 5 + (
-            "No filters recognised. Try a borough, a year, a ZIP code, "
-            "'new construction', 'preservation', 'pedestrian', 'cyclist' or 'motorist'.",
+            "No filters recognised. Try a borough, a year, a ZIP code, a housing word "
+            "('affordable', 'buildings', 'projects') or a road-safety word "
+            "('crashes', 'severe', 'non-severe', 'fatalities').",
             dash.no_update,
         )
 
@@ -229,6 +234,8 @@ def filter_data(boroughs, zips, years, housing_label, transport_label):
     # Helper columns so every chart respects the category dropdowns
     dff["housing_selected"] = dff[HOUSING_CATEGORIES[housing_label]]
     dff["injuries_selected"] = dff[TRANSPORT_CATEGORIES[transport_label]]
+    dff["housing_label"] = housing_label
+    dff["transport_label"] = transport_label
     return dff
 
 
@@ -258,23 +265,22 @@ def generate_report(_clicks, _trigger, boroughs, zips, years, housing, transport
         return message, []
 
     summary = [
-        summary_tile(f"{housing} (units)", f"{int(dff['housing_selected'].sum()):,}"),
-        summary_tile(f"Serious injuries - {transport}",
-                     f"{int(dff['injuries_selected'].sum()):,}"),
+        summary_tile(housing, f"{int(dff['housing_selected'].sum()):,}"),
+        summary_tile(transport, f"{int(dff['injuries_selected'].sum()):,}"),
         summary_tile("ZIP codes", f"{dff['zip_code'].nunique():,}"),
         summary_tile("Years", f"{dff['year'].min()}-{dff['year'].max()}"),
     ]
 
     cards = []
-    for member, chart_fn in ALL_CHARTS:
+    for rq_number, chart_fn in ALL_CHARTS:
         try:
             content = dcc.Graph(figure=chart_fn(dff), config=GRAPH_CONFIG,
                                 style={"height": "420px"})
         except Exception as err:  # one broken chart must not break the website
-            content = html.Div(f"Member {member} chart error: {err}",
+            content = html.Div(f"RQ{rq_number} chart error: {err}",
                                className="chart-error")
-        cards.append(html.Div([content, html.Div(f"Member {member}",
-                                                 className="chart-owner")],
+        cards.append(html.Div([content, html.Div(f"RQ{rq_number}",
+                                                 className="chart-label")],
                               className="chart-card"))
     return summary, cards
 

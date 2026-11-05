@@ -1,4 +1,6 @@
-"""Shared look for every chart, so all 12 charts match (Person 5 can tune this)."""
+"""Shared look for every visualization, so all charts on the website match."""
+
+import textwrap
 
 import plotly.graph_objects as go
 
@@ -31,14 +33,15 @@ def apply_style(fig, title, x_title=None, y_title=None):
     return fig
 
 
-def placeholder(member, question):
-    """Empty chart shown until a member adds their real chart."""
+def placeholder(rq_number, question):
+    """Empty chart shown until the real visualization for this research question is added."""
     fig = go.Figure()
+    wrapped = "<br>".join(textwrap.wrap(question, 55))
     fig.add_annotation(
-        text=f"Member {member}: chart coming soon<br><sup>{question}</sup>",
-        showarrow=False, font={"size": 14, "color": "#888"},
+        text=f"<b>Chart coming soon</b><br><br>{wrapped}",
+        showarrow=False, font={"size": 13, "color": "#888"},
         x=0.5, y=0.5, xref="paper", yref="paper",
     )
     for update in (fig.update_xaxes, fig.update_yaxes):
         update(showgrid=False, zeroline=False, showticklabels=False)
-    return apply_style(fig, question)
+    return apply_style(fig, f"RQ{rq_number}")
