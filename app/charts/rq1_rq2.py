@@ -1,22 +1,41 @@
-"""
-Visualizations for RQ1 and RQ2.
+"""Member 1's questions, adapted from Person1_Research_Questions.ipynb.
 
-Format: def rqN(df): ... return fig
-`df` is df_integrated already filtered by the website, plus helper columns:
-    housing_selected / housing_label     -> housing measure chosen in the housing dropdown
-    injuries_selected / transport_label  -> road-safety measure chosen in the transportation dropdown
-Use apply_style(fig, title, x_title, y_title) from charts.style so every chart matches.
-See rq7_rq8.py for a complete example.
+Geographic and year filters apply before aggregation. Measures stay fixed to
+these research questions, as in the member's notebook.
 """
+import plotly.express as px
+import plotly.graph_objects as go
 
-from charts.style import apply_style, placeholder  # noqa: F401
+from charts.style import BOROUGH_COLORS, CRASH_COLOR, HOUSING_COLOR, apply_style
 
 
 def rq1(df):
-    """RQ1: Do ZIP codes with more affordable housing units also have more serious crashes?"""
-    return placeholder(1, "Do ZIP codes with more affordable housing units also have more serious crashes?")
+    """One point per ZIP code, summed over the selected years."""
+    totals = df.groupby(["zip_code", "borough"], as_index=False)[
+        ["affordable_units", "serious_crash_count"]
+    ].sum()
+    fig = px.scatter(
+        totals, x="affordable_units", y="serious_crash_count", color="borough",
+        color_discrete_map=BOROUGH_COLORS, hover_data=["zip_code"],
+        labels={"borough": "Borough", "zip_code": "ZIP code"},
+    )
+    return apply_style(fig, "Affordable housing vs serious crashes by ZIP code",
+                       "Affordable housing units", "Serious crashes")
 
 
 def rq2(df):
-    """RQ2: Which boroughs have the highest affordable housing production and serious crash counts?"""
-    return placeholder(2, "Which boroughs have the highest affordable housing production and serious crash counts?")
+    """Compare shares on a common scale; preserve raw totals in hover."""
+    totals = df.groupby("borough")[["affordable_units", "serious_crash_count"]].sum()
+    fig = go.Figure()
+    for column, label, color in [
+        ("affordable_units", "Affordable housing units", HOUSING_COLOR),
+        ("serious_crash_count", "Serious crashes", CRASH_COLOR),
+    ]:
+        denominator = totals[column].sum()
+        shares = totals[column] / denominator * 100 if denominator else totals[column] * 0
+        fig.add_bar(x=totals.index, y=shares, name=label, marker_color=color,
+                    customdata=totals[column].to_numpy().reshape(-1, 1),
+                    hovertemplate="%{x}<br>%{y:.1f}%<br>Total: %{customdata[0]:,}<extra>%{fullData.name}</extra>")
+    fig.update_layout(barmode="group")
+    return apply_style(fig, "Housing and crash shares by borough (selected data)",
+                       "Borough", "Share of selected total (%)")

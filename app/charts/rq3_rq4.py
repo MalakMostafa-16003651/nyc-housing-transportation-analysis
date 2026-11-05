@@ -1,22 +1,43 @@
-"""
-Visualizations for RQ3 and RQ4.
+"""Member 2's specified research questions using the integrated CSV.
 
-Format: def rqN(df): ... return fig
-`df` is df_integrated already filtered by the website, plus helper columns:
-    housing_selected / housing_label     -> housing measure chosen in the housing dropdown
-    injuries_selected / transport_label  -> road-safety measure chosen in the transportation dropdown
-Use apply_style(fig, title, x_title, y_title) from charts.style so every chart matches.
-See rq7_rq8.py for a complete example.
+These website implementations do not replace the missing transportation EDA
+and cleaning notebook. Borough, ZIP code and year filters apply to both charts.
 """
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
-from charts.style import apply_style, placeholder  # noqa: F401
+from charts.style import BOROUGH_COLORS, CRASH_COLOR, HOUSING_COLOR, apply_style
 
 
 def rq3(df):
-    """RQ3: How have affordable housing production and serious crashes changed over time?"""
-    return placeholder(3, "How have affordable housing production and serious crashes changed over time?")
+    """Annual totals with separately labelled axes for the different units."""
+    totals = df.groupby("year", as_index=False)[["affordable_units", "serious_crash_count"]].sum()
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    for column, label, color, secondary in [
+        ("affordable_units", "Affordable housing units", HOUSING_COLOR, False),
+        ("serious_crash_count", "Serious crashes", CRASH_COLOR, True),
+    ]:
+        fig.add_trace(go.Scatter(x=totals["year"], y=totals[column],
+                                mode="lines+markers", name=label,
+                                line={"color": color}), secondary_y=secondary)
+    fig = apply_style(fig, "Housing and crashes over time — boundary years may be partial", "Year")
+    fig.update_xaxes(dtick=1)
+    fig.update_yaxes(title_text="Affordable housing units", secondary_y=False)
+    fig.update_yaxes(title_text="Serious crashes", secondary_y=True)
+    fig.update_layout(margin={"r": 80})
+    return fig
 
 
 def rq4(df):
-    """RQ4: Do ZIP codes with more housing projects also have more severe crash injuries?"""
-    return placeholder(4, "Do ZIP codes with more housing projects also have more severe crash injuries?")
+    """One point per ZIP code, summed over the selected years."""
+    totals = df.groupby(["zip_code", "borough"], as_index=False)[
+        ["housing_project_count", "severe_injuries"]
+    ].sum()
+    fig = px.scatter(
+        totals, x="housing_project_count", y="severe_injuries", color="borough",
+        color_discrete_map=BOROUGH_COLORS, hover_data=["zip_code"],
+        labels={"borough": "Borough", "zip_code": "ZIP code"},
+    )
+    return apply_style(fig, "Housing projects vs severe injuries by ZIP code",
+                       "Housing projects (sum of ZIP-year counts)", "Severe injuries")
