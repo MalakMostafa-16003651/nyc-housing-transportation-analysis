@@ -109,6 +109,14 @@ app.layout = html.Div(className="page", children=[
                     className="btn btn-primary"),
     ]),
 
+    html.P("Borough, ZIP and year filters apply to every chart. Housing and transportation "
+           "selectors update summary totals; RQ8 also uses the transportation selection. "
+           "Other charts keep the measures named in their research questions.",
+           className="filter-help"),
+    html.P("Data scope: matched ZIP-years only. Housing includes preservation and new "
+           "construction. Crash records cover October 2022–June 2026; boundary years "
+           "are partial. Totals are not citywide crash risk measures.", className="filter-help"),
+
     # Report output
     dcc.Store(id="search-trigger", data=0),
     dcc.Loading(type="circle", children=[

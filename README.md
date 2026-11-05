@@ -82,3 +82,41 @@ Across 143 ZIP codes (2022–2026) there is a moderate-to-strong positive associ
 ![RQ8](rq8_crashes_per_project_bar.png)
 
 Staten Island has the most serious crashes per housing project (5.53), followed by Manhattan (4.38), Queens (3.67) and Brooklyn (2.99); the Bronx has the fewest (1.94). The ranking is the same for 2023–2025. The Bronx and Brooklyn build a similar number of projects (729 and 756), but the Bronx has far fewer crashes per project. Staten Island's ratio rests on only 15 projects, so it is the least reliable. The ratio does not account for population, road length or traffic volume.
+
+## Team integration and validation
+
+See [the project review and team handoff](docs/PROJECT_REVIEW.md) for why notebook
+charts were missing from the website, the remaining submission requirements,
+and the branch/pull-request workflow.
+
+RQ1–RQ4 are now implemented in the website. RQ1–RQ8 follow borough, ZIP and year
+filters. Several research questions keep fixed measures to preserve their meaning;
+the housing/transport selectors determine summary totals, and RQ8 also follows the
+transport selector. RQ9–RQ12 remain assigned to Members 5 and 6.
+
+Run the dashboard regression checks from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+### Notebook development (persons 1–4)
+
+Install the analysis tools separately from the website deployment requirements:
+
+```bash
+pip install -r requirements-analysis.txt
+python scripts/check_notebooks.py
+```
+
+The notebook check executes Person 1's research, the added Person 2 RQ3/RQ4
+analysis, Person 3's integration, and Person 4's RQ7/RQ8 notebooks in temporary
+copies with fresh kernels. Generated CSVs and plots do not overwrite your checkout.
+It does not rerun live housing extraction or the missing transportation cleaning
+source. Housing cleaning now makes its final Colab download optional locally.
+
+Person 2 still needs to supply the original transportation loading, EDA and cleaning
+notebook and extraction details. The added research notebook does not replace it.
+Person 3's integration is reproducible from the supplied cleaned CSVs; the tests
+compare it against the committed integrated dataset. See the handoff document for
+the join audit, missing-unit caveats, and remaining responsibilities.
