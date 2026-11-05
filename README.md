@@ -4,7 +4,7 @@
 
 This project studies the relationship between affordable housing growth and road safety in New York City.
 
-## Person 1 – Housing Data
+## Person 1: Kareem – Housing Data
 
 ### Responsibilities
 - Loaded and explored the Affordable Housing Production by Building dataset.
@@ -120,3 +120,22 @@ notebook and extraction details. The added research notebook does not replace it
 Person 3's integration is reproducible from the supplied cleaned CSVs; the tests
 compare it against the committed integrated dataset. See the handoff document for
 the join audit, missing-unit caveats, and remaining responsibilities.
+
+## Team assignments and evidence
+
+Names and assignments were supplied by the team. The table distinguishes the
+assigned work from files currently reviewed; it does not certify individual authorship.
+Student IDs still need to be added by the team.
+
+| Person | Name | Assigned responsibility | Current repository evidence / remaining work |
+| --- | --- | --- | --- |
+| 1 | Kareem | Housing cleaning and RQ1–RQ2 | Housing cleaning and research notebooks, cleaned CSV, website charts present. |
+| 2 | Youssef | Transportation cleaning and RQ3–RQ4 | Cleaned CSV present; RQ3–RQ4 notebook and website charts added during repair. Original cleaning/EDA source still needed. |
+| 3 | Malak | ZIP-year aggregation/integration and RQ5–RQ6 | Integration notebook and website charts present; transformation reproduces the saved CSV. |
+| 4 | Ahmed | Dash website and RQ7–RQ8 | Dashboard, chart modules and RQ7–RQ8 notebook present. |
+| 5 | Kenzy | Visual consistency, map, story and RQ9–RQ10 | Assigned; RQ9–RQ10 remain placeholders and final story is pending. |
+| 6 | Lama | Documentation, testing, deployment and RQ11–RQ12 | Assigned; RQ11–RQ12 and deployment verification remain pending. Repair added tests and documentation. |
+
+The team's supplied prompts are recorded in [AI prompts](docs/AI_PROMPTS.md).
+Include this record in the final notebook/submission documentation; add any other
+prompts used and confirm the record with each member.
