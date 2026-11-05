@@ -24,7 +24,7 @@ that Member 2's missing notebook or cleaning work has been reviewed.
 | Story | Website story text still needs Members 5/6's final synthesis. |
 | Final notebook | Separate notebooks exist; assemble a documented, restart-and-run-all submission covering both source datasets, cleaning, integration, all research questions and prompts used. Do not merely concatenate saved outputs. |
 | Deployment | Gunicorn entry point is available; no live deployed URL was verified. |
-| Contribution record | README currently documents Members 1 and 4. Add actual names/IDs and evidence for all six; do not claim missing work is complete. |
+| Contribution record | README now lists all six supplied names, assignments and repository evidence. Student IDs and final contribution confirmation remain needed. |
 
 Partial boundary years must be disclosed when comparing annual totals. Avoid
 claims that housing causes crashes; no population or traffic exposure adjustment
@@ -59,7 +59,7 @@ Render build: `pip install -r requirements.txt`.
 Render start: `gunicorn --chdir app app:server --bind 0.0.0.0:$PORT`.
 Keep `df_integrated.csv` in the deployed checkout. Test search, filters, empty
 results and Generate Report on the deployed site before recording its URL.
-No deployment or GitHub push was performed by this review.
+Repairs were pushed to `fix/members-1-4-integration`. No deployment was performed; main is not assumed merged.
 
 ## Verified repair checks
 
@@ -80,11 +80,11 @@ No deployment or GitHub push was performed by this review.
    The supplied cleaned crash snapshot ends June 30, 2026; confirm extraction scope.
 2. Persons 1–3: confirm the preservation + new-construction scope and treatment of
    missing housing-unit values. Do not label all production as newly built housing.
-3. Persons 5–6: finish RQ9–RQ12, the story, map, final notebook assembly, real member
-   names/IDs and contribution record, and deployed-site verification.
-4. All members: supply actual AI prompts used, as requested by the assignment.
-   The repair used the user's request to fix persons 1–4 and their six-person
-   breakdown; add earlier prompts from each contributor without inventing history.
+3. Persons 5–6: finish RQ9–RQ12, the story, map, final notebook assembly, member
+   IDs and final contribution confirmation, and deployed-site verification.
+4. All members: confirm the prompts recorded in `AI_PROMPTS.md` and supply any
+   additional prompts used. The user has supplied names and one prompt for each
+   member; student IDs and original tool/date details were not supplied.
 
 Notebook validation: `python scripts/check_notebooks.py` passed all four offline
 notebooks in fresh kernels (8 + 3 + 9 + 10 code cells). The live-source housing
