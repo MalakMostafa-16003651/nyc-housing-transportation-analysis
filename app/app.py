@@ -126,15 +126,72 @@ app.layout = html.Div(className="page", children=[
 
     # Story section
     html.Section(className="card story", children=[
-        html.H2("The story"),
+        html.H2("The story: building homes where the streets are most dangerous"),
+
         html.H3("Question"),
-        html.P("Content coming soon."),
+        html.P("New York produces about 29,000 affordable homes a year, and every new resident "
+               "walks, cycles, rides or drives on the streets around them. Is affordable housing "
+               "being built where serious crashes happen, and does more housing mean more people "
+               "badly hurt? If the city's most affordable homes sit on its most dangerous streets, "
+               "the families least able to afford a car or a hospital bill are the most exposed."),
+
         html.H3("Key findings"),
-        html.P("Content coming soon."),
+        html.Ul([
+            html.Li("Housing and crashes go together across space: ZIP codes with more affordable "
+                    "units have more serious crashes (RQ1, Spearman ρ = 0.64), and ZIPs with more "
+                    "housing buildings have more severe injuries (RQ7, ρ = 0.73)."),
+            html.Li("The overlap is concentrated (RQ9 map): 23 of 143 ZIP codes are in the top 25% "
+                    "for both. They hold 44% of affordable units, 34% of serious crashes and 29% "
+                    "of crash deaths, in two clusters: the South/Central Bronx (11 ZIPs) and "
+                    "Central/East Brooklyn (8 ZIPs). East New York (11207) and Brownsville (11212) "
+                    "are the worst."),
+            html.Li("Brooklyn leads in both housing and crashes (RQ2: 33% of units, 38% of "
+                    "crashes). The Bronx builds almost as much housing with fewer crashes per "
+                    "project (RQ8: 1.94 vs 5.53 in Staten Island)."),
+            html.Li("More housing does not bring more injuries over time (RQ10): from 2023 to 2025 "
+                    "citywide affordable production was flat (+0.6%) while severe injuries rose "
+                    "17.5%. Within ZIP codes, years with more new housing did not have more "
+                    "injuries (ρ = -0.09, not significant)."),
+            html.Li("Over the full years, crashes rose while housing did not (RQ3): in matched "
+                    "ZIP-years, 2023 to 2025 affordable units fell 2.7% while serious crashes "
+                    "rose 18.9%."),
+            html.Li("ZIP codes with more housing projects have more severe injuries (RQ4: "
+                    "Pearson r = 0.71, Spearman ρ = 0.81 across 143 ZIPs)."),
+            html.Li("High-in-both ZIP-years are a Bronx and Brooklyn pattern (RQ5): 27 of the 29 "
+                    "ZIP-years in the top 25% for both in 2023-2025 are in these two boroughs."),
+            html.Li("Some ZIPs have many crashes for little housing (RQ6): 11234 (Brooklyn) and "
+                    "11377 (Queens) have about 65 serious crashes per 100 affordable units."),
+            # TODO (Lama): one html.Li each for RQ11 and RQ12
+            html.Li("What surprised us: the link is about place, not construction. Affordable "
+                    "housing is going up in neighbourhoods that were already dangerous, and "
+                    "injuries there keep rising."),
+        ]),
+
         html.H3("Limitations"),
-        html.P("Content coming soon."),
+        html.Ul([
+            html.Li("Correlation is not causation: dense, lower-income areas with wide arterial "
+                    "roads tend to have both more housing and more crashes."),
+            html.Li("Counts are not risk rates: there is no population or traffic-volume "
+                    "denominator."),
+            html.Li("Crash records cover October 2022 to June 2026, so 2022 and 2026 are partial; "
+                    "year comparisons use 2023-2025 only (three points)."),
+            html.Li("Housing is dated by project start; residents arrive years later."),
+            html.Li("Only ZIP-years present in both datasets are included; about 16% of crashes "
+                    "have no coordinates and are counted but not mapped. ZIP codes are coarse "
+                    "and a few cross borough lines. Housing includes preservation, not only new "
+                    "buildings."),
+        ]),
+
         html.H3("Why it matters for NYC"),
-        html.P("Content coming soon."),
+        html.Ul([
+            html.Li("NYC DOT / Vision Zero: prioritise the 23 overlap ZIPs for street redesigns "
+                    "(daylighting, protected bike lanes, leading pedestrian intervals, speed "
+                    "cameras); one project there protects current and future residents."),
+            html.Li("HPD and City Planning: add a street-safety check to site selection for large "
+                    "affordable projects in overlap ZIPs and coordinate with DOT before move-in."),
+            html.Li("Community boards and housing advocates in the Bronx and East Brooklyn: use "
+                    "the map to ask for safety investment alongside new housing."),
+        ]),
     ]),
 
     html.Footer("ICS503 Data Engineering and Visualization - Winter 2026",
