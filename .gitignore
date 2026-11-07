@@ -1,4 +1,6 @@
 venv/
+.venv/
+.nyc-notebooks-*/
 __pycache__/
 *.pyc
 .DS_Store

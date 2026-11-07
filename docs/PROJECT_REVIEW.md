@@ -1,92 +1,95 @@
-# Integration review and team handoff
+# Project audit and requirements review
 
-## Why the questions were missing
+Reviewed against the team's supplied brief on **November 7, 2026**. The attached
+GIU ZIP is a data-integration teaching lab using retail and jobs datasets. Its
+examples were treated as reference material, not instructions to change this NYC
+project or to run its API/LLM examples. No separate NYC grading rubric was present.
 
-The main checkout contained Member 1's completed research notebook and PNGs,
-but `app/charts/rq1_rq2.py` still returned placeholder figures. RQ3/RQ4 were also
-placeholders. Notebook cells do not run when Dash starts: website chart functions
-must explicitly implement their plots and be registered in `ALL_CHARTS`.
+## Deliverables for Persons 1–5
 
-RQ1–RQ4 now use the same integrated CSV as RQ5–RQ8. RQ1/RQ2 adapt Member 1's
-analysis; RQ3/RQ4 implement the team's supplied questions. They are not evidence
-that Member 2's missing notebook or cleaning work has been reviewed.
+| Person | Requirements | Repository evidence after repair |
+| --- | --- | --- |
+| 1 — Kareem | Housing loading, EDA, missing/duplicate/outlier/type/value checks; standardized keys; cleaned data; two charts | `Housing_Data_Cleaning.ipynb`, archived raw housing, `scripts/cleaning.py`, `df_housing_clean.csv`, `Person1_Research_Questions.ipynb`, website RQ1/RQ2. Offline source reproduction added; source observations and labels corrected. |
+| 2 — Youssef | SIRTA loading, EDA, cleaning, standardized keys, cleaned data, two charts | `Transport_Data_Cleaning.ipynb`, archived raw SIRTA, `scripts/cleaning.py`, `df_transport_clean.csv`, `Person2_Research_Questions.ipynb`, website RQ3/RQ4. Original cleaning notebook was missing; this audit reconstructed a method reproducing every supplied source field. This is an audit addition, not proof of Youssef's original process. |
+| 3 — Malak | Aggregate both tables by ZIP/year first; merge; audit unmatched/duplicate/null/type issues; post-clean; explain join; two charts | `dataEngP3.ipynb`, shared `scripts/integration.py`, both aggregate CSVs, `df_integrated.csv`, audit tables, `INTEGRATION_METHOD.md`, RQ5/RQ6. Existing integrated values reproduced unchanged. |
+| 4 — Ahmed | Layout; borough/year/ZIP/housing/transport filters; search; Generate Report; graphs connected to integrated data; two charts | `app/`, `RQ7_RQ8_Research_Questions.ipynb`, RQ7/RQ8. Search validation, real-data loading and edge cases repaired. An additional selected-measures explorer responds to both measure selectors while fixed RQs preserve their meanings. |
+| 5 — Kenzy | Consistent chart titles/labels/legends; main map; evidence-based findings/limits/impact; two charts | `Person5_Research_Questions.ipynb`, RQ9/RQ10, `data/zip_centroids.csv`, shared chart styling and dashboard story. Removed unsupported causal claims and changed the main annual comparison to a balanced ZIP panel. |
 
-## Requirements checked against the supplied project description
+Names and assignments are user-provided. We reviewed the work, not individual
+authorship. The transportation reconstruction and repair assistance should remain
+identified in the contribution record.
 
-| Area | Evidence / remaining work |
-| --- | --- |
-| Housing cleaning | `Housing_Data_Cleaning.ipynb` and cleaned CSV present; final Colab download is now optional for local Jupyter. Live source download has not been revalidated. |
-| Transportation cleaning | Cleaned CSV present; original transportation loading, EDA and cleaning notebook absent from this main checkout. RQ3/RQ4 analysis has been added in `Person2_Research_Questions.ipynb`. Ask Member 2 to merge the source notebook, with explanations and dataset link. |
-| Integration | `dataEngP3.ipynb` aggregates each dataset by ZIP + year before a validated one-to-one merge. It audits an outer join, then retains matched rows only. |
-| Scope of results | Integrated data represents matched ZIP-years, not all NYC housing or all crashes. Unmatched records are excluded, not zero-filled. Summed annual project counts are not necessarily unique projects across years. |
-| RQ1–RQ8 website | Implemented. Borough, ZIP and year filters apply. Fixed research questions retain their own metrics; RQ8 follows the transport selector. |
-| RQ9–RQ12 | Still placeholders: Members 5 and 6 must supply their questions, charts and analysis. Six members require 12 visualizations. |
-| Story | Website story text still needs Members 5/6's final synthesis. |
-| Final notebook | Separate notebooks exist; assemble a documented, restart-and-run-all submission covering both source datasets, cleaning, integration, all research questions and prompts used. Do not merely concatenate saved outputs. |
-| Deployment | Gunicorn entry point is available; no live deployed URL was verified. |
-| Contribution record | README now lists all six supplied names, assignments and repository evidence. Student IDs and final contribution confirmation remain needed. |
+## Material findings
 
-Partial boundary years must be disclosed when comparing annual totals. Avoid
-claims that housing causes crashes; no population or traffic exposure adjustment
-is included. If housing means new construction only, review source program/type
-fields first: affordable housing production can include preservation.
+- All three supplied cleaned/integrated CSVs match the repository values. Line
+  ending differences are not data changes.
+- Recovered official raw housing has 9,551 rows/41 columns; its cleaning reproduces
+  9,551 rows/42 columns. There are 1,958 missing housing ZIPs and 29 unknown
+  affordable-unit values; unknowns are not proof of zero production.
+- Raw SIRTA has 13,754 rows. The supplied 8,072-row clean file is the source subset
+  with ZIPs. The 5,682 excluded rows include three exact duplicates; dropping the
+  duplicates first then missing ZIPs gives the same retained file. All retained
+  crash IDs are distinct. Source ZIP10000 occurs in 44 retained rows and requires
+  geography review; none matches housing, so none enters the integrated data.
+- Malak's aggregation order is correct. The 1,155 housing and 829 transport groups
+  produce 484 matches; 1,016 unmatched groups are exported. The final 484 rows
+  cover 143 ZIPs and have no duplicate ZIP/year keys or null output values.
+- Six matched borough disagreements are retained in an audit table and resolved
+  using the existing housing-majority convention. Geography was not independently
+  certified against ZIP boundaries.
+- The map's saved positions average source coordinates; they are approximate
+  positions, not official ZIP centroids. Missing coordinates are disclosed.
+- Calendar coverage and matching differ by year. 2022's October start in the
+  cleaned transportation table comes from ZIP availability; the raw source starts
+  earlier. Calling 2023–2025 interior calendar years does not imply complete
+  geography or complete crash coverage.
+- For the 72 ZIPs matched in every year of 2023–2025, affordable units decrease
+  from 25,494 to 21,562 (-15.4%), while severe injuries increase from 1,177 to
+  1,453 (+23.4%). This replaces the previous changing-sample, incorrectly
+  citywide 'flat housing' story. It does not establish the effect of housing on
+  injuries. The within-ZIP analysis is descriptive, without an independence-based
+  p-value for repeated ZIP observations.
 
-## A practical Git workflow
+Read [INTEGRATION_METHOD.md](INTEGRATION_METHOD.md) for aggregation definitions,
+unknown-unit handling, join decisions and reproducibility commands. Do not convert
+missing source geography or unmatched records to zero counts without justification.
 
-Git shares versions of files. The shared data contract and website interfaces are
-what make those files work together.
+## Validation
 
-1. Before starting: `git switch main` then `git pull --ff-only` (save your own work first).
-2. Create one task branch: `git switch -c member2/rq3-rq4`.
-3. Keep the shared names in the team brief. Each website function accepts the
-   filtered integrated dataframe and returns a Plotly figure. RQ1–RQ2 belong to
-   Member 1, RQ3–RQ4 to Member 2, through RQ11–RQ12 for Member 6.
-4. Run `python -m unittest discover -s tests -v` from the repository root.
-5. Commit only your intended files, push the branch, and open a pull request to
-   main. Include what changed, how it was checked, and a screenshot or notebook link.
-6. One teammate reviews and merges. Everyone pulls main again before their next task.
+Run from the repository root after installing `requirements-analysis.txt`:
 
-Avoid having several people regenerate `df_integrated.csv` independently. Member 3
-owns that output and documents schema changes before merging them. Avoid editing
-the same notebook simultaneously; integrate reviewed sections in a final notebook
-near submission. A successful merge still needs application tests.
+```bash
+python -m unittest discover -s tests -v
+python scripts/integration.py
+python scripts/check_notebooks.py
+```
 
-## Run and deploy
+The notebook checker verifies raw SHA-256 hashes, copies the source/data/modules
+into an isolated temporary directory, and executes all seven notebooks with fresh
+kernels. Optional `--write-executed` refreshes checked-in notebook outputs and four
+static figures only after all notebooks pass; it does not replace source CSVs.
+The regression suite checks actual data, independent aggregation, source cleaning,
+invalid inputs, filters/search, report HTTP callbacks, map/trend edge cases and
+all 16 measure combinations. Final run results are recorded in `VERIFICATION.md`.
 
-Local dashboard: install `requirements.txt`, then `python app/app.py` from the root.
-Tests: `python -m unittest discover -s tests -v`.
-Render build: `pip install -r requirements.txt`.
-Render start: `gunicorn --chdir app app:server --bind 0.0.0.0:$PORT`.
-Keep `df_integrated.csv` in the deployed checkout. Test search, filters, empty
-results and Generate Report on the deployed site before recording its URL.
-Repairs were pushed to `fix/members-1-4-integration`. No deployment was performed; main is not assumed merged.
+## Remaining Person 6 work
 
-## Verified repair checks
+RQ11 and RQ12 remain visibly marked as pending; they are not counted among the ten
+Person 1–5 visualizations. No verified deployment URL exists. Lama should finish
+those two research questions, deploy the Dash service, test the live interface and
+record its URL. The current audit fixes README/testing within the requested
+Persons 1–5 review, without claiming the whole six-person submission is complete.
 
-- Seven regression tests cover real-data keys, exact integration reproduction,
-  search, empty results, report HTTP callbacks, chart values and all 16 category
-  combinations for RQ1–RQ8.
-- Integration reproduces 484 matched rows from 1,155 housing and 829 transportation
-  ZIP-year groups; 671 housing-only and 345 transport-only groups are excluded.
-- The 29 unknown source housing-unit values are skipped by aggregation, not
-  established as zero. Observed totals may undercount. Six borough disagreements
-  are resolved by the existing housing-majority convention; this is documented,
-  not presented as externally verified ZIP geography.
+## Contribution and handoff
 
-## What to ask teammates for
+The README lists all six supplied names and assignments, with Malak responsible for
+integration. `AI_PROMPTS.md` preserves the prior repository's prompt record; this
+audit did not independently authenticate its historical attribution. Keep member
+confirmation and any additional disclosure required by the course with the final
+submission. A single assembled notebook was not required by the supplied brief;
+the documented run order and fresh execution cover the separate deliverables.
 
-1. Person 2: original transportation cleaning/EDA notebook, raw download or exact
-   download parameters and date, and reasons for null/outlier/duplicate handling.
-   The supplied cleaned crash snapshot ends June 30, 2026; confirm extraction scope.
-2. Persons 1–3: confirm the preservation + new-construction scope and treatment of
-   missing housing-unit values. Do not label all production as newly built housing.
-3. Persons 5–6: finish RQ9–RQ12, the story, map, final notebook assembly, member
-   IDs and final contribution confirmation, and deployed-site verification.
-4. All members: confirm the prompts recorded in `AI_PROMPTS.md` and supply any
-   additional prompts used. The user has supplied names and one prompt for each
-   member; student IDs and original tool/date details were not supplied.
-
-Notebook validation: `python scripts/check_notebooks.py` passed all four offline
-notebooks in fresh kernels (8 + 3 + 9 + 10 code cells). The live-source housing
-cleaning notebook was not rerun; its final local-download portability issue was
-fixed. Source refresh may change the snapshot and should be reviewed separately.
+Repairs are prepared on `codex/project-audit-persons-1-5`. Review source changes,
+run the checks above, then merge the reviewed branch. The integrated values were
+preserved; audit files, reproducible raw inputs and corrected figures accompany
+the code and documentation.

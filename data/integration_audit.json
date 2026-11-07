@@ -1,0 +1,48 @@
+{
+  "integration_rule": "aggregate both datasets by zip_code + year, then inner match",
+  "housing_source_rows": 9551,
+  "transportation_source_rows": 8072,
+  "housing_rows_missing_keys": 1958,
+  "transportation_rows_missing_keys": 0,
+  "housing_zip_year_groups": 1155,
+  "transportation_zip_year_groups": 829,
+  "matched_zip_year_groups": 484,
+  "housing_only_zip_year_groups": 671,
+  "transportation_only_zip_year_groups": 345,
+  "borough_disagreements": 6,
+  "borough_policy": "most frequent housing borough per ZIP across the source snapshot; alphabetical tie break",
+  "unknown_affordable_unit_source_rows": 29,
+  "unknown_affordable_unit_rows_in_matched_groups": 3,
+  "housing_units_missing_zip_share": 0.010441008767830101,
+  "source_transportation_zip_10000_rows": 44,
+  "integrated_zip_10000_rows": 0,
+  "transportation_date_min": "2022-10-01",
+  "transportation_date_max": "2026-06-30",
+  "integrated_null_counts": {
+    "zip_code": 0,
+    "year": 0,
+    "housing_building_count": 0,
+    "housing_project_count": 0,
+    "affordable_units": 0,
+    "total_housing_units": 0,
+    "serious_crash_count": 0,
+    "severe_injuries": 0,
+    "non_severe_injuries": 0,
+    "fatalities": 0,
+    "borough": 0
+  },
+  "integrated_metric_totals": {
+    "housing_building_count": 2873.0,
+    "housing_project_count": 2031.0,
+    "affordable_units": 112688.0,
+    "total_housing_units": 174883.0,
+    "serious_crash_count": 5881.0,
+    "severe_injuries": 5940.0,
+    "non_severe_injuries": 1412.0,
+    "fatalities": 393.0
+  },
+  "source_sha256_lf": {
+    "df_housing_clean.csv": "dc53f75e742b6eb6d3663d9f572e2dd30aa33694ca3e9382a601f0e7bdb558e9",
+    "df_transport_clean.csv": "6d4fc041d6d2b86b783b648f644b18699696e292bb32da1e3e41de436dcd5bec"
+  }
+}

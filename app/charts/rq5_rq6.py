@@ -8,7 +8,7 @@ borough, ZIP code and year filters are selected.
 import plotly.express as px
 import plotly.graph_objects as go
 
-from charts.style import apply_style
+from charts.style import BOROUGH_COLORS, OTHER_COLOR, OVERLAP_COLOR, apply_style
 
 
 def _empty(title, message):
@@ -34,6 +34,8 @@ def rq5(df):
     data["category"] = (
         (data["affordable_units"] >= housing_limit)
         & (data["serious_crash_count"] >= crash_limit)
+        & (data["affordable_units"] > 0)
+        & (data["serious_crash_count"] > 0)
     ).map({True: "High in both", False: "Other"})
 
     fig = px.scatter(
@@ -41,6 +43,7 @@ def rq5(df):
         x="affordable_units",
         y="serious_crash_count",
         color="category",
+        color_discrete_map={"High in both": OVERLAP_COLOR, "Other": OTHER_COLOR},
         hover_data=["zip_code", "year", "borough"],
         labels={
             "affordable_units": "Affordable Housing Units",
@@ -53,7 +56,7 @@ def rq5(df):
     )
     fig.add_vline(x=housing_limit, line_dash="dash")
     fig.add_hline(y=crash_limit, line_dash="dash")
-    return apply_style(fig, "Affordable Housing vs Serious Crashes",
+    return apply_style(fig, "ZIP-years high in housing and serious crashes (selected top quartiles)",
                        "Affordable Housing Units", "Serious Crash Count")
 
 
@@ -92,6 +95,7 @@ def rq6(df):
         x="crashes_per_100_units",
         y="zip_code",
         color="borough",
+        color_discrete_map=BOROUGH_COLORS,
         orientation="h",
         hover_data=["affordable_units", "serious_crash_count"],
         labels={
@@ -103,4 +107,8 @@ def rq6(df):
         },
     )
     fig.update_yaxes(type="category")
+    fig.add_annotation(text="Requires ≥100 affordable units and a record in every selected year.",
+                       xref="paper", yref="paper", x=0, y=-0.25, showarrow=False,
+                       xanchor="left", font={"size": 10, "color": "#777"})
+    fig.update_layout(margin={"b": 85})
     return apply_style(fig, title, "Crashes per 100 Affordable Units", "ZIP Code")

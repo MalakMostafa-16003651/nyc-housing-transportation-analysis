@@ -13,15 +13,20 @@ BOROUGH_COLORS = {
 }
 HOUSING_COLOR = "#2a6fdb"
 CRASH_COLOR = "#c43d5a"
+OVERLAP_COLOR = "#6a3d9a"
+OTHER_COLOR = "#c9ced3"
 
 
 def apply_style(fig, title, x_title=None, y_title=None):
     """Common title, fonts, margins and hover style."""
+    title = "<br>".join(line for part in title.split("<br>")
+                         for line in textwrap.wrap(part, 42))
+    title_lines = title.count("<br>") + 1
     fig.update_layout(
-        title={"text": title, "x": 0.02, "font": {"size": 16}},
+        title={"text": title, "x": 0.02, "font": {"size": 15}},
         template="plotly_white",
         font={"family": "Inter, Arial, sans-serif", "size": 12},
-        margin={"l": 60, "r": 20, "t": 60, "b": 50},
+        margin={"l": 60, "r": 20, "t": 45 + 20 * title_lines, "b": 50},
         height=420,
         hoverlabel={"font_size": 12},
         legend={"title": None},

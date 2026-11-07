@@ -1,0 +1,25 @@
+{
+  "retrieved_date": "2026-11-07",
+  "retrieval_timezone": "Africa/Cairo",
+  "notes": "Recovered official snapshots reproduce all supplied cleaned fields; this does not certify historical authorship or original extraction time.",
+  "sources": [
+    {
+      "dataset_id": "hg8x-zxpr",
+      "file": "df_housing_raw.csv",
+      "url": "https://data.cityofnewyork.us/resource/hg8x-zxpr.csv?$limit=50000",
+      "metadata_url": "https://data.cityofnewyork.us/api/views/hg8x-zxpr.json",
+      "sha256": "f77076f923e170ea6ba24662a9d5eed56fe81d4ab5b1e78905a8bdf11774fd74",
+      "rows": 9551,
+      "columns": 41
+    },
+    {
+      "dataset_id": "xeqp-qz8h",
+      "file": "df_transport_raw.csv",
+      "url": "https://data.cityofnewyork.us/resource/xeqp-qz8h.csv?$limit=50000",
+      "metadata_url": "https://data.cityofnewyork.us/api/views/xeqp-qz8h.json",
+      "sha256": "8e6fdd1df9f0b26500eb21b9091a26c7c04b71da5df0310141302d3c6a0a626b",
+      "rows": 13754,
+      "columns": 23
+    }
+  ]
+}
