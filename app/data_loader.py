@@ -2,10 +2,10 @@
 Loads df_integrated for the website.
 
 Looks for the integrated dataset in this order:
-    1. data/df_integrated.csv
-    2. df_integrated.csv in the repository root
-If neither exists, a DUMMY dataset with the same columns is generated so the
-website still runs.
+    1. df_integrated.csv in the repository root (canonical)
+    2. data/df_integrated.csv (deployment fallback)
+Missing or invalid data raises an actionable error; production results must never
+silently be replaced with simulated records.
 
 df_integrated columns (one row per zip_code + year):
     zip_code, borough, year
@@ -17,11 +17,10 @@ df_integrated columns (one row per zip_code + year):
 
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DATA_FILES = [REPO_ROOT / "data" / "df_integrated.csv", REPO_ROOT / "df_integrated.csv"]
+DATA_FILES = [REPO_ROOT / "df_integrated.csv", REPO_ROOT / "data" / "df_integrated.csv"]
 
 # Dropdown label -> df_integrated column.
 HOUSING_CATEGORIES = {
@@ -38,51 +37,37 @@ TRANSPORT_CATEGORIES = {
 }
 
 
-def _make_dummy_data():
-    """Random data with the real column names. Numbers mean nothing."""
-    rng = np.random.default_rng(42)
-    zips_by_borough = {
-        "Manhattan": [f"100{n:02d}" for n in range(1, 41)],
-        "Bronx": [f"104{n:02d}" for n in range(51, 76)],
-        "Brooklyn": [f"112{n:02d}" for n in range(1, 40)],
-        "Queens": [f"11{n}" for n in range(354, 380)],
-        "Staten Island": [f"103{n:02d}" for n in range(1, 15)],
-    }
-    rows = []
-    for borough, zips in zips_by_borough.items():
-        for z in zips:
-            size = rng.uniform(0.3, 2.0)
-            for year in range(2022, 2027):
-                affordable = int(rng.poisson(200 * size))
-                severe = int(rng.poisson(12 * size))
-                rows.append({
-                    "zip_code": z, "borough": borough, "year": year,
-                    "housing_building_count": int(rng.poisson(6 * size)) + 1,
-                    "housing_project_count": int(rng.poisson(4 * size)) + 1,
-                    "affordable_units": affordable,
-                    "total_housing_units": affordable + int(rng.poisson(120 * size)),
-                    "serious_crash_count": severe,
-                    "severe_injuries": severe,
-                    "non_severe_injuries": int(rng.poisson(3 * size)),
-                    "fatalities": int(rng.poisson(0.8 * size)),
-                })
-    return pd.DataFrame(rows)
-
-
 def load_data():
-    """Return (df_integrated, is_dummy)."""
+    """Return validated (df_integrated, False), preserving the dashboard interface."""
     for path in DATA_FILES:
         if path.exists():
-            df = pd.read_csv(path)
-            is_dummy = False
+            df = pd.read_csv(path, dtype={"zip_code": "string"})
             break
     else:
-        df = _make_dummy_data()
-        is_dummy = True
+        raise FileNotFoundError("df_integrated.csv is missing. Add the validated integration "
+                                "output to the repository root or data/ before starting Dash.")
 
-    # Consistent formats for the filters and search:
-    # zip_code is stored as a number in the CSV, so turn it back into 5-character text
-    df["zip_code"] = df["zip_code"].astype(int).astype(str).str.zfill(5)
+    measures = list(HOUSING_CATEGORIES.values()) + list(TRANSPORT_CATEGORIES.values())
+    required = ["zip_code", "borough", "year", *measures]
+    missing = sorted(set(required) - set(df.columns))
+    if missing:
+        raise ValueError(f"Integrated dataset is missing columns: {', '.join(missing)}")
+    if df.empty or df[required].isna().any().any():
+        raise ValueError("Integrated dataset must contain rows with no missing required values.")
+    df["zip_code"] = df["zip_code"].str.strip()
+    if not df["zip_code"].str.fullmatch(r"\d{5}").all():
+        raise ValueError("Integrated zip_code values must be five-digit strings.")
     df["borough"] = df["borough"].astype(str).str.strip().str.title()
-    df["year"] = df["year"].astype(int)
-    return df, is_dummy
+    valid_boroughs = {"Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"}
+    if not df["borough"].isin(valid_boroughs).all():
+        raise ValueError("Integrated borough values must use the five standardized NYC names.")
+    for column in ["year", *measures]:
+        values = pd.to_numeric(df[column], errors="raise")
+        if not ((values >= 0) & (values < float("inf")) & (values % 1 == 0)).all():
+            raise ValueError(f"Integrated {column} must contain finite nonnegative integers.")
+        df[column] = values.astype("int64")
+    if not df["year"].between(1900, 2100).all():
+        raise ValueError("Integrated year values must be calendar years between 1900 and 2100.")
+    if df.duplicated(["zip_code", "year"]).any():
+        raise ValueError("Integrated dataset has duplicate zip_code + year keys.")
+    return df, False

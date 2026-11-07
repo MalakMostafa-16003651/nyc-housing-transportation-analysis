@@ -1,0 +1,2 @@
+# Raw snapshot checksums must survive Windows and Linux checkouts.
+data/raw/*.csv text eol=lf

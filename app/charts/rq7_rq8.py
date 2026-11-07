@@ -42,14 +42,17 @@ def rq7(df):
     if len(per_zip) >= 3 and per_zip["buildings"].nunique() > 1:
         slope, intercept = np.polyfit(per_zip["buildings"], per_zip["severe"], 1)
         xs = np.linspace(per_zip["buildings"].min(), per_zip["buildings"].max(), 50)
-        r = np.corrcoef(per_zip["buildings"], per_zip["severe"])[0, 1]
+        trend_label = "Trend (constant injury count)"
+        if per_zip["severe"].nunique() > 1:
+            r = np.corrcoef(per_zip["buildings"], per_zip["severe"])[0, 1]
+            trend_label = f"Trend (r = {r:.2f})"
         fig.add_trace(go.Scatter(
             x=xs, y=slope * xs + intercept, mode="lines",
-            name=f"Trend (r = {r:.2f})", line={"color": "#333", "dash": "dash"},
+            name=trend_label, line={"color": "#333", "dash": "dash"},
             hoverinfo="skip",
         ))
     return apply_style(fig, "Housing buildings vs severe injuries by ZIP code",
-                       "Housing buildings", "Severe injuries")
+                       "Housing buildings<br>(sum of ZIP-year counts)", "Severe injuries")
 
 
 def rq8(df):
@@ -74,8 +77,13 @@ def rq8(df):
         text=per_borough["per_project"].round(2),
         hover_data={"measure": True, "projects": True, "per_project": ":.2f"},
         labels={"per_project": f"{label} per housing project", "borough": "Borough",
-                "measure": label, "projects": "Housing projects"},
+                "measure": label, "projects": "Summed ZIP-year project counts"},
     )
     fig.update_traces(marker_color=CRASH_COLOR, textposition="outside", cliponaxis=False)
-    return apply_style(fig, f"{label} per housing project by borough",
-                       "Borough", f"{label} per project")
+    fig = apply_style(fig, f"{label} per housing project count by borough",
+                      "Borough", f"{label} per summed project count")
+    fig.add_annotation(text="Denominator sums ZIP-year project counts;<br>a project may repeat across ZIPs or years.",
+                       xref="paper", yref="paper", x=0, y=-0.25, showarrow=False,
+                       xanchor="left", font={"size": 10, "color": "#777"})
+    fig.update_layout(margin={"b": 85})
+    return fig

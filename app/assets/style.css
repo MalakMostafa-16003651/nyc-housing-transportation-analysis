@@ -20,6 +20,7 @@ body { margin: 0; background: #f4f6f9; color: #1d2433;
 
 .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .filter-block { margin-bottom: 14px; }
+.filter-help { color: #4a5568; font-size: 13px; line-height: 1.5; }
 .filter-label { display: block; font-size: 13px; font-weight: 600;
                 margin-bottom: 4px; color: #4a5568; }
 
@@ -39,7 +40,7 @@ body { margin: 0; background: #f4f6f9; color: #1d2433;
 .charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
                margin-top: 16px; }
 .chart-card { background: #fff; border-radius: 10px; padding: 8px;
-              box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+              min-width: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 .chart-label { font-size: 11px; color: #9aa3af; text-align: right; padding: 0 8px 4px; }
 .chart-error { padding: 40px 16px; color: #c43d5a; }
 .empty-message { background: #fff; border-radius: 10px; padding: 32px;
@@ -47,9 +48,18 @@ body { margin: 0; background: #f4f6f9; color: #1d2433;
 
 .story h3 { font-size: 15px; margin: 14px 0 4px; }
 .story p { margin: 0; color: #4a5568; line-height: 1.5; }
+.story li { margin-bottom: 8px; line-height: 1.5; }
 .footer { text-align: center; font-size: 12px; color: #9aa3af; margin-top: 24px; }
 
 @media (max-width: 800px) {
   .filter-grid, .summary-row { grid-template-columns: 1fr 1fr; }
   .charts-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .filter-grid, .summary-row { grid-template-columns: 1fr; }
+  .search-row { flex-wrap: wrap; }
+  .search-input { min-width: 0; width: 100%; }
+  .header h1 { font-size: 24px; }
+  .card { padding: 16px; }
 }

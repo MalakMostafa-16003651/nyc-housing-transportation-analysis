@@ -1,7 +1,7 @@
 """Member 2's specified research questions using the integrated CSV.
 
-These website implementations do not replace the missing transportation EDA
-and cleaning notebook. Borough, ZIP code and year filters apply to both charts.
+These website implementations complement Transport_Data_Cleaning.ipynb's source
+EDA and cleaning replay. Borough, ZIP code and year filters apply to both charts.
 """
 import plotly.express as px
 import plotly.graph_objects as go

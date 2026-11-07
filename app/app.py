@@ -11,8 +11,10 @@ import re
 
 import dash
 from dash import Dash, Input, Output, State, dcc, html
+import plotly.express as px
 
 from charts import ALL_CHARTS
+from charts.style import BOROUGH_COLORS, apply_style
 from data_loader import HOUSING_CATEGORIES, TRANSPORT_CATEGORIES, load_data
 
 # --------------------------------------------------------------------------
@@ -68,8 +70,6 @@ app.layout = html.Div(className="page", children=[
         html.H1("Housing Growth and Road Safety in New York City"),
         html.P("How does affordable housing production relate to serious traffic "
                "injuries across NYC ZIP codes and boroughs?"),
-        html.Div("Showing DUMMY data - the real merged dataset is not added yet.",
-                 className="dummy-banner") if IS_DUMMY else None,
     ]),
 
     # Search
@@ -109,31 +109,42 @@ app.layout = html.Div(className="page", children=[
                     className="btn btn-primary"),
     ]),
 
-    html.P("Borough, ZIP and year filters apply to every chart. Housing and transportation "
-           "selectors update summary totals; RQ8 also uses the transportation selection. "
+    html.P("Choose filters, then select Generate Report to update the charts. "
+           "Search applies its recognised filters immediately. Borough, ZIP and year "
+           "filters apply to every chart. Housing and transportation "
+           "selectors update summary totals and the selected-measures explorer; RQ8 also "
+           "uses the transportation selection. "
            "Other charts keep the measures named in their research questions.",
            className="filter-help"),
     html.P("Data scope: matched ZIP-years only. Housing includes preservation and new "
-           "construction. Crash records cover October 2022–June 2026; boundary years "
+           "construction. The supplied ZIP-resolved crash snapshot spans October 2022–June 2026; boundary years "
            "are partial. Totals are not citywide crash risk measures.", className="filter-help"),
 
     # Report output
     dcc.Store(id="search-trigger", data=0),
     dcc.Loading(type="circle", children=[
         html.Div(id="summary-row", className="summary-row"),
+        html.Section(className="card", children=[
+            html.H2("Explore selected measures"),
+            html.P("Compare the housing and transportation measures you selected. Each "
+                   "point totals one ZIP and borough across the selected years; numbered "
+                   "research questions below retain their specified measures.", className="filter-help"),
+            html.Div(id="exploration-chart"),
+        ]),
         html.Div(id="charts-grid", className="charts-grid"),
     ]),
 
     # Story section
     html.Section(className="card story", children=[
-        html.H2("The story: building homes where the streets are most dangerous"),
+        html.H2("The story: affordable housing and serious crashes share some locations"),
+        html.P("These findings describe the full matched snapshot and stay fixed when report "
+               "filters change. The charts above describe the current selection."),
 
         html.H3("Question"),
-        html.P("New York produces about 29,000 affordable homes a year, and every new resident "
-               "walks, cycles, rides or drives on the streets around them. Is affordable housing "
-               "being built where serious crashes happen, and does more housing mean more people "
-               "badly hurt? If the city's most affordable homes sit on its most dangerous streets, "
-               "the families least able to afford a car or a hospital bill are the most exposed."),
+        html.P("Where do recorded affordable housing production and serious crashes overlap? "
+               "We compare housing project starts with SIRTA records after aggregating each "
+               "source by ZIP code and year. Housing includes preservation and new construction; "
+               "this is not a measure of net housing growth, residents' exposure, or road-safety risk."),
 
         html.H3("Key findings"),
         html.Ul([
@@ -143,15 +154,17 @@ app.layout = html.Div(className="page", children=[
             html.Li("The overlap is concentrated (RQ9 map): 23 of 143 ZIP codes are in the top 25% "
                     "for both. They hold 44% of affordable units, 34% of serious crashes and 29% "
                     "of crash deaths, in two clusters: the South/Central Bronx (11 ZIPs) and "
-                    "Central/East Brooklyn (8 ZIPs). East New York (11207) and Brownsville (11212) "
-                    "are the worst."),
+                    "Central/East Brooklyn (8 ZIPs). These are selected counts, not a ranking "
+                    "of danger to individual residents."),
             html.Li("Brooklyn leads in both housing and crashes (RQ2: 33% of units, 38% of "
-                    "crashes). The Bronx builds almost as much housing with fewer crashes per "
+                    "crashes). The Bronx records almost as many affordable units with fewer crashes per "
                     "project (RQ8: 1.94 vs 5.53 in Staten Island)."),
-            html.Li("More housing does not bring more injuries over time (RQ10): from 2023 to 2025 "
-                    "citywide affordable production was flat (+0.6%) while severe injuries rose "
-                    "17.5%. Within ZIP codes, years with more new housing did not have more "
-                    "injuries (ρ = -0.09, not significant)."),
+            html.Li("The temporal analysis does not establish an effect of housing on injuries "
+                    "(RQ10). Among the 72 ZIPs represented in all of 2023–2025, recorded "
+                    "affordable units fell from 25,494 to 21,562 (15.4%) while severe injuries "
+                    "rose from 1,177 to 1,453 (23.4%). Annual totals and within-ZIP changes "
+                    "answer different questions from cross-ZIP correlations; these patterns "
+                    "do not establish causation."),
             html.Li("Over the full years, crashes rose while housing did not (RQ3): in matched "
                     "ZIP-years, 2023 to 2025 affordable units fell 2.7% while serious crashes "
                     "rose 18.9%."),
@@ -162,31 +175,36 @@ app.layout = html.Div(className="page", children=[
             html.Li("Some ZIPs have many crashes for little housing (RQ6): 11234 (Brooklyn) and "
                     "11377 (Queens) have about 65 serious crashes per 100 affordable units."),
             # TODO (Lama): one html.Li each for RQ11 and RQ12
-            html.Li("What surprised us: the link is about place, not construction. Affordable "
-                    "housing is going up in neighbourhoods that were already dangerous, and "
-                    "injuries there keep rising."),
+            html.Li("Interpretation: the spatial associations motivate further investigation. "
+                    "They do not show whether housing changes crashes, whether streets were "
+                    "already dangerous before projects began, or whether residents face higher risk."),
         ]),
 
         html.H3("Limitations"),
         html.Ul([
-            html.Li("Correlation is not causation: dense, lower-income areas with wide arterial "
-                    "roads tend to have both more housing and more crashes."),
+            html.Li("Correlation is not causation. Population, traffic, road design and other "
+                    "potential confounders were not measured or controlled here."),
             html.Li("Counts are not risk rates: there is no population or traffic-volume "
                     "denominator."),
-            html.Li("Crash records cover October 2022 to June 2026, so 2022 and 2026 are partial; "
-                    "year comparisons use 2023-2025 only (three points)."),
+            html.Li("The supplied ZIP-resolved crash snapshot spans October 2022 to June 2026, "
+                    "so 2022 and 2026 are partial; year comparisons use 2023–2025 only. "
+                    "This span is not the full SIRTA program coverage. Records with missing "
+                    "ZIP codes were excluded upstream (5,682 of 13,754 in the audited source), "
+                    "which can bias spatial and annual comparisons."),
             html.Li("Housing is dated by project start; residents arrive years later."),
-            html.Li("Only ZIP-years present in both datasets are included; about 16% of crashes "
-                    "have no coordinates and are counted but not mapped. ZIP codes are coarse "
-                    "and a few cross borough lines. Housing includes preservation, not only new "
-                    "buildings."),
+            html.Li("Only ZIP-years present in both datasets are included. The set of ZIPs "
+                    "can change by year, so matched totals are not citywide totals or a balanced panel. "
+                    "ZIP locations on the map are approximate averages of available source "
+                    "coordinates, not crash sites or official ZIP boundaries."),
+            html.Li("Some source housing-unit values are unknown, so sums of observed units "
+                    "can undercount. ZIP codes are coarse and a few cross borough lines. "
+                    "Project counts summed across ZIPs need not be unique citywide projects."),
         ]),
 
         html.H3("Why it matters for NYC"),
         html.Ul([
-            html.Li("NYC DOT / Vision Zero: prioritise the 23 overlap ZIPs for street redesigns "
-                    "(daylighting, protected bike lanes, leading pedestrian intervals, speed "
-                    "cameras); one project there protects current and future residents."),
+            html.Li("NYC DOT / Vision Zero: use overlap ZIPs as candidates for more detailed "
+                    "street-level review, with traffic exposure, population and crash-location data."),
             html.Li("HPD and City Planning: add a street-safety check to site selection for large "
                     "affordable projects in overlap ZIPs and coordinate with DOT before move-in."),
             html.Li("Community boards and housing advocates in the Bronx and East Brooklyn: use "
@@ -203,7 +221,7 @@ app.layout = html.Div(className="page", children=[
 # Search: turn typed text into filter values
 # --------------------------------------------------------------------------
 def parse_search(text):
-    """Return a dict of filter values found in the text, plus a list of notes."""
+    """Return recognised filter values and any explicit unsupported ZIPs or years."""
     text = (text or "").lower()
     found = {}
 
@@ -215,14 +233,20 @@ def parse_search(text):
     if boroughs:
         found["borough"] = boroughs
 
-    zips = [z for z in re.findall(r"\b\d{5}\b", text) if z in ZIP_CODES]
+    requested_zips = sorted(set(re.findall(r"\b\d{5}\b", text)))
+    zips = [z for z in requested_zips if z in ZIP_CODES]
     if zips:
         found["zip"] = sorted(set(zips))
 
-    years = [int(y) for y in re.findall(r"\b(?:19|20)\d{2}\b", text)
-             if YEAR_MIN <= int(y) <= YEAR_MAX]
+    requested_years = sorted(set(int(y) for y in re.findall(r"\b(?:19|20)\d{2}\b", text)))
+    years = [y for y in requested_years if YEAR_MIN <= y <= YEAR_MAX]
     if years:
         found["years"] = [min(years), max(years)]
+    invalid = [f"ZIP {z} is not in the matched dataset" for z in requested_zips if z not in ZIP_CODES]
+    invalid += [f"year {y} is outside {YEAR_MIN}–{YEAR_MAX}" for y in requested_years
+                if not YEAR_MIN <= y <= YEAR_MAX]
+    if invalid:
+        found["errors"] = invalid
 
     # Phrases are checked in order, so "non-severe" is matched before "severe"
     for word, category in TRANSPORT_KEYWORDS.items():
@@ -252,6 +276,11 @@ def parse_search(text):
 )
 def apply_search(_clicks, _submit, text, trigger):
     found = parse_search(text)
+    if found.get("errors"):
+        return (dash.no_update,) * 5 + (
+            "Search not applied: " + "; ".join(found["errors"]) + ". Update the search and try again.",
+            dash.no_update,
+        )
     if not found:
         return (dash.no_update,) * 5 + (
             "No filters recognised. Try a borough, a year, a ZIP code, a housing word "
@@ -296,7 +325,7 @@ def filter_data(boroughs, zips, years, housing_label, transport_label):
     if years:
         dff = dff[dff["year"].between(years[0], years[1])]
     dff = dff.copy()
-    # Helper columns so every chart respects the category dropdowns
+    # Summary measures and RQ8 use these helpers; fixed RQs retain their named axes.
     dff["housing_selected"] = dff[HOUSING_CATEGORIES[housing_label]]
     dff["injuries_selected"] = dff[TRANSPORT_CATEGORIES[transport_label]]
     dff["housing_label"] = housing_label
@@ -309,9 +338,23 @@ def summary_tile(label, value):
                      html.Div(label, className="tile-label")], className="tile")
 
 
+def selected_measure_chart(df, housing, transport):
+    totals = df.groupby(["zip_code", "borough"], as_index=False)[
+        ["housing_selected", "injuries_selected"]
+    ].sum()
+    fig = px.scatter(
+        totals, x="housing_selected", y="injuries_selected", color="borough",
+        color_discrete_map=BOROUGH_COLORS, hover_data=["zip_code"],
+        labels={"borough": "Borough", "zip_code": "ZIP code",
+                "housing_selected": housing, "injuries_selected": transport},
+    )
+    return apply_style(fig, f"Selected measures: {housing} vs {transport}", housing, transport)
+
+
 @app.callback(
     Output("summary-row", "children"),
     Output("charts-grid", "children"),
+    Output("exploration-chart", "children"),
     Input("generate-btn", "n_clicks"),
     Input("search-trigger", "data"),
     State("borough-filter", "value"),
@@ -327,7 +370,7 @@ def generate_report(_clicks, _trigger, boroughs, zips, years, housing, transport
         message = html.Div(
             "No data matches these filters. Try fewer filters or a wider year range.",
             className="empty-message")
-        return message, []
+        return message, [], []
 
     summary = [
         summary_tile(housing, f"{int(dff['housing_selected'].sum()):,}"),
@@ -347,7 +390,9 @@ def generate_report(_clicks, _trigger, boroughs, zips, years, housing, transport
         cards.append(html.Div([content, html.Div(f"RQ{rq_number}",
                                                  className="chart-label")],
                               className="chart-card"))
-    return summary, cards
+    exploration = dcc.Graph(figure=selected_measure_chart(dff, housing, transport),
+                            config=GRAPH_CONFIG, style={"height": "420px"})
+    return summary, cards, exploration
 
 
 if __name__ == "__main__":

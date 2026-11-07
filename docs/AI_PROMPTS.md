@@ -1,9 +1,10 @@
 # Team AI prompt record
 
-These prompts were supplied by the team in this conversation. Names and assignments
-are user-provided; the prompts are not evidence that the requested work was completed.
-They are preserved below as supplied (with Markdown headings added). Student IDs,
-the original tools/models, dates of use, and any additional prompts were not supplied.
+This historical prompt record is preserved from the repository. Its original
+introduction attributed the prompts to the team; this audit did not independently
+verify that attribution. Names and assignments were confirmed in the current user
+request. Prompts are not evidence that the requested work was completed. Original
+tools/models, dates of use and any additional prompts remain unverified.
 
 ## Person 1 — Kareem
 
@@ -146,10 +147,22 @@ Please use Python, pandas, and Plotly for the graphs. Give me simple code and cl
 
 ## Integration repair assistance
 
-Additional requests in this conversation asked Codex to inspect the repository,
+The prior repository record states that additional requests asked Codex to inspect the repository,
 repair available work for persons 1–4, identify missing teammate deliverables,
 and push the fixes. Codex implemented website RQ1–RQ4, added the RQ3–RQ4
 analysis notebook, adjusted notebook portability and scope documentation, and
 added regression and notebook execution checks. See `PROJECT_REVIEW.md` for
 verified checks and remaining gaps. This paragraph summarizes the repair requests;
 it is not a transcript of earlier prompts used by individual members.
+
+## November 7, 2026 audit assistance
+
+The current user asked Codex to analyze the repository and supplied files, verify
+Persons 1–5 against the shared NYC datasets, dataframe names, aggregate-before-merge
+rule and assigned research questions, fix errors and update the README and files.
+They identified Person 3 as Malak and supplied the six member names. Codex recovered
+official raw snapshots, reconstructed the missing transportation cleaning workflow,
+added shared cleaning/integration code and audit exports, corrected misleading
+claims and chart edge cases, and expanded verification. These are audit additions;
+they do not establish individual authorship of historical work. See PROJECT_REVIEW.md
+and VERIFICATION.md for scope, results and remaining Person 6 deliverables.
