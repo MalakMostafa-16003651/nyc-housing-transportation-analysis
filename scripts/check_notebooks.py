@@ -17,7 +17,8 @@ from jupyter_client.kernelspec import KernelSpecManager
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS = ["Person1_Research_Questions.ipynb", "Person2_Research_Questions.ipynb",
-             "dataEngP3.ipynb", "RQ7_RQ8_Research_Questions.ipynb"]
+             "dataEngP3.ipynb", "RQ7_RQ8_Research_Questions.ipynb",
+             "Person5_Research_Questions.ipynb"]
 
 
 def main():
