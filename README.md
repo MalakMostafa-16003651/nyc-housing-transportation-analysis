@@ -83,6 +83,23 @@ Across 143 ZIP codes (2022–2026) there is a moderate-to-strong positive associ
 
 Staten Island has the most serious crashes per housing project (5.53), followed by Manhattan (4.38), Queens (3.67) and Brooklyn (2.99); the Bronx has the fewest (1.94). The ranking is the same for 2023–2025. The Bronx and Brooklyn build a similar number of projects (729 and 756), but the Bronx has far fewer crashes per project. Staten Island's ratio rests on only 15 projects, so it is the least reliable. The ratio does not account for population, road length or traffic volume.
 
+## Person 5: Kenzy – Visualizations, Map & Story
+
+### Responsibilities
+- Set the shared chart rules (website colours from `app/charts/style.py`, titles, labels, partial years) and reviewed every team chart.
+- Built the main map (RQ9) and the RQ10 charts, in `Person5_Research_Questions.ipynb` and on the website (`app/charts/rq9_rq10.py`).
+- Combined all research questions into the final story (notebook and website story section).
+
+### Research Questions & Findings
+
+**RQ9 — Where in NYC do high affordable housing production and high serious-crash levels overlap?**
+
+23 of 143 ZIP codes are in the top 25% for both affordable units and serious crashes (Oct 2022 – Jun 2026). They hold 44% of affordable units, 34% of serious crashes and 29% of crash deaths, in two clusters: the South/Central Bronx (11 ZIPs) and Central/East Brooklyn (8 ZIPs). 11207 (East New York) and 11212 (Brownsville) are the worst. No Staten Island ZIP qualifies.
+
+**RQ10 — Do years with higher affordable housing production also have higher or lower severe injuries?**
+
+No. Over the complete years 2023–2025, citywide affordable production was flat (+0.6%) while severe injuries rose 17.5%. Within ZIP codes, years with more new housing did not have more severe injuries (Spearman ρ = −0.09, p = 0.24, n = 167 ZIP-year changes). The link between housing and crashes is about place, not construction.
+
 ## Team integration and validation
 
 See [the project review and team handoff](docs/PROJECT_REVIEW.md) for why notebook
@@ -92,7 +109,9 @@ and the branch/pull-request workflow.
 RQ1–RQ4 are now implemented in the website. RQ1–RQ8 follow borough, ZIP and year
 filters. Several research questions keep fixed measures to preserve their meaning;
 the housing/transport selectors determine summary totals, and RQ8 also follows the
-transport selector. RQ9–RQ12 remain assigned to Members 5 and 6.
+transport selector. RQ9–RQ10 (Member 5) are implemented: RQ9 is a ZIP-code map that needs
+`data/zip_centroids.csv` (written by `Person5_Research_Questions.ipynb`). RQ11–RQ12 remain
+assigned to Member 6.
 
 Run the dashboard regression checks from the repository root:
 
@@ -133,7 +152,7 @@ Student IDs still need to be added by the team.
 | 2 | Youssef | Transportation cleaning and RQ3–RQ4 | Cleaned CSV present; RQ3–RQ4 notebook and website charts added during repair. Original cleaning/EDA source still needed. |
 | 3 | Malak | ZIP-year aggregation/integration and RQ5–RQ6 | Integration notebook and website charts present; transformation reproduces the saved CSV. |
 | 4 | Ahmed | Dash website and RQ7–RQ8 | Dashboard, chart modules and RQ7–RQ8 notebook present. |
-| 5 | Kenzy | Visual consistency, map, story and RQ9–RQ10 | Assigned; RQ9–RQ10 remain placeholders and final story is pending. |
+| 5 | Kenzy | Visual consistency, map, story and RQ9–RQ10 | `Person5_Research_Questions.ipynb` (RQ9 overlap map, RQ10 full-year trend and within-ZIP changes, chart consistency review, final story); website `app/charts/rq9_rq10.py`, `data/zip_centroids.csv` and story section in `app/app.py`. |
 | 6 | Lama | Documentation, testing, deployment and RQ11–RQ12 | Assigned; RQ11–RQ12 and deployment verification remain pending. Repair added tests and documentation. |
 
 The team's supplied prompts are recorded in [AI prompts](docs/AI_PROMPTS.md).
