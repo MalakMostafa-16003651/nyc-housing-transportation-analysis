@@ -10,7 +10,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 import app as dashboard
 from charts import ALL_CHARTS
-from charts import rq7_rq8, rq9_rq10
+from charts import rq7_rq8, rq9_rq10, rq11_rq12
 import data_loader
 
 
@@ -27,7 +27,7 @@ class DashboardTests(unittest.TestCase):
                                       ([], ["11212"], [2023, 2023])]:
             df = dashboard.filter_data(boroughs, zips, years, "Affordable units", "Serious crashes")
             self.assertFalse(df.empty)
-            for number, chart in ALL_CHARTS[:10]:
+            for number, chart in ALL_CHARTS:
                 with self.subTest(rq=number, boroughs=boroughs, zips=zips):
                     fig = chart(df)
                     self.assertTrue(len(fig.data) > 0 or len(fig.layout.annotations) > 0)
@@ -180,3 +180,44 @@ class DashboardTests(unittest.TestCase):
         fig = rq7_rq8.rq7(df)
         self.assertEqual(fig.data[-1].name, "Trend (constant injury count)")
         self.assertTrue(all(value == 0 for value in fig.data[-1].y))
+
+
+class Person6ChartTests(unittest.TestCase):
+    """RQ11 and RQ12 (Person 6)."""
+
+    def test_rq11_groups_every_zip_once_using_per_year_averages(self):
+        df = dashboard.filter_data([], [], [2022, 2026], "Affordable units", "Serious crashes")
+        fig = rq11_rq12.rq11(df)
+        plotted = sum(len(trace.x) for trace in fig.data)
+        self.assertEqual(plotted, df["zip_code"].nunique())
+        averages = df.groupby("zip_code")["affordable_units"].mean()
+        all_x = sorted(x for trace in fig.data for x in trace.x)
+        self.assertEqual(all_x, sorted(averages.tolist()))
+        self.assertTrue(any(name.startswith("High housing, poor safety") for name in
+                            (trace.name for trace in fig.data)))
+        self.assertEqual(len(fig.layout.annotations), 3)  # three labelled ZIPs
+
+    def test_rq11_zero_median_does_not_mark_every_zip_poor_safety(self):
+        df = dashboard.filter_data([], [], [2022, 2026], "Affordable units", "Fatalities")
+        fig = rq11_rq12.rq11(df)
+        names = [trace.name for trace in fig.data]
+        self.assertTrue(any("safer" in name for name in names))
+        self.assertEqual(fig.layout.xaxis.type, None)  # zeros -> linear axes
+
+    def test_rq12_one_series_per_borough_with_correlation(self):
+        df = dashboard.filter_data([], [], [2022, 2026], "Affordable units", "Serious crashes")
+        fig = rq11_rq12.rq12(df)
+        legend = [trace.name for trace in fig.data if trace.showlegend is not False]
+        self.assertEqual(len(legend), df["borough"].nunique())
+        self.assertTrue(all("ρ" in name for name in legend))
+        bronx = df[df.borough == "Bronx"].groupby("zip_code")[
+            ["affordable_units", "serious_crash_count"]].mean()
+        rho = bronx.rank().corr().iloc[0, 1]
+        self.assertTrue(any(name.startswith(f"Bronx (ρ = {rho:.2f}") for name in legend))
+
+    def test_rq11_rq12_single_zip_and_empty_selection(self):
+        single = dashboard.filter_data([], ["11212"], [2023, 2023], "Affordable units", "Serious crashes")
+        for chart in (rq11_rq12.rq11, rq11_rq12.rq12):
+            chart(single).to_json()
+            empty = chart(single.iloc[0:0])
+            self.assertIn("No ZIP codes", empty.layout.annotations[0].text)

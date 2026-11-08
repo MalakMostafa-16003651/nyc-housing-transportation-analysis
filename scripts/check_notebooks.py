@@ -21,14 +21,14 @@ ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOKS = ["Housing_Data_Cleaning.ipynb", "Transport_Data_Cleaning.ipynb",
              "dataEngP3.ipynb", "Person1_Research_Questions.ipynb", "Person2_Research_Questions.ipynb",
              "RQ7_RQ8_Research_Questions.ipynb",
-             "Person5_Research_Questions.ipynb"]
+             "Person5_Research_Questions.ipynb", "Person6_Research_Questions.ipynb"]
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write-executed", action="store_true")
     parser.add_argument("--notebooks", nargs="+", choices=NOTEBOOKS, default=NOTEBOOKS,
-                        help="Run a selected subset; default executes all seven notebooks.")
+                        help="Run a selected subset; default executes all eight notebooks.")
     parser.add_argument("--output-directory", type=Path,
                         help="Optionally retain generated tables/HTML outside the checkout data.")
     args = parser.parse_args()

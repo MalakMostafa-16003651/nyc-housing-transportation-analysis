@@ -72,13 +72,17 @@ The regression suite checks actual data, independent aggregation, source cleanin
 invalid inputs, filters/search, report HTTP callbacks, map/trend edge cases and
 all 16 measure combinations. Final run results are recorded in `VERIFICATION.md`.
 
-## Remaining Person 6 work
+## Person 6 deliverables (November 8, 2026)
 
-RQ11 and RQ12 remain visibly marked as pending; they are not counted among the ten
-Person 1–5 visualizations. No verified deployment URL exists. Lama should finish
-those two research questions, deploy the Dash service, test the live interface and
-record its URL. The current audit fixes README/testing within the requested
-Persons 1–5 review, without claiming the whole six-person submission is complete.
+RQ11 and RQ12 are implemented in `app/charts/rq11_rq12.py` and analysed in
+`Person6_Research_Questions.ipynb`. Both compare ZIPs per matched year, because
+summed totals correlate strongly with how many years a ZIP is matched (Spearman
+0.76 units, 0.80 crashes). This also means summed-total correlations elsewhere
+(RQ1, RQ4, RQ7) partly reflect coverage; RQ12 reports the per-year association
+(ρ = 0.30 citywide; clear only in the Bronx). The notebook checks that the website
+functions reproduce its values. Four regression tests cover RQ11/RQ12, including a
+zero-median edge case and empty selections. `render.yaml` defines the Render
+deployment; the live URL is recorded in the README once deployed and tested.
 
 ## Contribution and handoff
 

@@ -174,7 +174,16 @@ app.layout = html.Div(className="page", children=[
                     "ZIP-years in the top 25% for both in 2023-2025 are in these two boroughs."),
             html.Li("Some ZIPs have many crashes for little housing (RQ6): 11234 (Brooklyn) and "
                     "11377 (Queens) have about 65 serious crashes per 100 affordable units."),
-            # TODO (Lama): one html.Li each for RQ11 and RQ12
+            html.Li("High housing does not always mean poor road safety (RQ11). Comparing ZIPs "
+                    "per matched year, 45 of 143 are above the median on both affordable units "
+                    "and serious crashes (about 25% would be expected by chance), led by "
+                    "11207, 10019, 11212 and 11203. Most are in Brooklyn (18) and the Bronx (14). "
+                    "Another 27 high-housing ZIPs have below-median crashes."),
+            html.Li("The link differs by borough (RQ12). Per matched year, the citywide rank "
+                    "correlation is modest (ρ = 0.30), and only the Bronx shows a clear one "
+                    "(ρ = 0.56; 95% bootstrap interval 0.11–0.86). Brooklyn, Manhattan and "
+                    "Queens are weak (ρ = 0.12–0.20, intervals include zero). Summed totals "
+                    "look stronger partly because ZIPs matched in more years have more of both."),
             html.Li("Interpretation: the spatial associations motivate further investigation. "
                     "They do not show whether housing changes crashes, whether streets were "
                     "already dangerous before projects began, or whether residents face higher risk."),

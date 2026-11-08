@@ -145,6 +145,15 @@ I also need to create two graphs using our integrated dataset:
 
 Please use Python, pandas, and Plotly for the graphs. Give me simple code and clear instructions for testing and deployment. Explain what I should check at every step, and don't assume something works until we've actually tested it.
 
+### Person 6 assistance (November 8, 2026)
+
+Lama used Claude (Anthropic) with the prompt above, plus the team's task breakdown and
+the course project description. Claude reviewed the repository, ran the tests, wrote
+`app/charts/rq11_rq12.py`, `Person6_Research_Questions.ipynb`, the RQ11/RQ12 tests and
+story text, `render.yaml`, and the README deployment section, and ran browser
+end-to-end checks of the dashboard. The per-year averaging decision came from checking
+how summed totals relate to the number of matched years.
+
 ## Integration repair assistance
 
 The prior repository record states that additional requests asked Codex to inspect the repository,

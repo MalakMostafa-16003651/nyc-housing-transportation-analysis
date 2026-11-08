@@ -1,0 +1,13 @@
+# Render Blueprint: Render dashboard -> New -> Blueprint -> pick this repository.
+# Free web service running the Dash app with gunicorn.
+services:
+  - type: web
+    name: nyc-housing-road-safety
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --chdir app app:server --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8

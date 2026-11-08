@@ -34,7 +34,7 @@ Assignments and names were supplied by the team. File evidence and checks establ
 | 3 | **Malak** | **ZIP/year aggregation, integration, validation and post-merge cleaning** | RQ5: ZIPs high in housing and crashes (scatter). RQ6: top 10 crash-to-affordable-unit ratios (bar). |
 | 4 | Ahmed | Website, filters, search and Generate Report | RQ7: buildings vs severe injuries (scatter). RQ8: crashes per project by borough (bar). |
 | 5 | Kenzy | Chart consistency, map and story | RQ9: high-housing/high-crash overlap (map). RQ10: annual housing vs severe injuries (line/scatter analysis). |
-| 6 | Lama | Final documentation, testing and deployment | RQ11: high housing/poor safety (categorized scatter/heatmap). RQ12: associations by borough (colored scatter). **RQ11–RQ12 and verified deployment remain pending.** |
+| 6 | Lama | Final documentation, testing and deployment | RQ11: ZIPs with high housing but poor road safety (categorized scatter). RQ12: does the housing–crash link differ by borough (borough-coloured scatter + correlation chart). README, testing (notebook checks, unit tests, browser end-to-end checks) and Render deployment. |
 
 ## Findings and limitations
 
@@ -43,6 +43,8 @@ Within the matched sample, ZIPs with more affordable units tend to have more ser
 Brooklyn leads matched-sample affordable-unit and crash totals. Staten Island has the highest crash-to-project ratio with a small housing denominator. This ratio is **not a population-adjusted safety rate**. RQ6 excludes zero-unit denominators rather than inventing a ratio.
 
 RQ9 defines high as at or above the 75th percentile among ZIPs in the current selection. The full sample has 23 ZIPs high on both. Thresholds change with filters. Marker positions average available housing/crash coordinates; they are **not official ZIP centroids or boundaries**.
+
+RQ11 and RQ12 compare ZIPs **per matched year** (sum ÷ number of matched years), because ZIPs are matched in 1–5 years and summed totals mostly track that coverage (Spearman ρ 0.76 for units and 0.80 for crashes against matched years). RQ11 splits ZIPs at the median of the current selection: 45 of 143 are above median on both affordable units and serious crashes, versus about 25% expected if unrelated. Brooklyn (18) and the Bronx (14) contribute most; 27 high-housing ZIPs have below-median crashes. RQ12 finds a modest citywide per-year association (ρ = 0.30). Only the Bronx shows a clear one (ρ = 0.56, 95% bootstrap interval 0.11–0.86); Brooklyn, Manhattan and Queens are weak (ρ 0.12–0.20, intervals include zero), and Staten Island (7 ZIPs) is too small to judge. A balanced 2023–2025 panel (72 ZIPs) gives the same pattern. These are associations between counts, not risk rates or causal effects.
 
 RQ10 compares ZIPs present in every selected year within 2023–2025. Among those 72 ZIPs, affordable units fell 15.4% (25,494 to 21,562) while severe injuries rose 23.4% (1,177 to 1,453). A balanced panel reduces changing-sample bias but does not restore missing-ZIP records or establish causality. Three interior years cannot establish a general annual relationship. Boundary years and varying ZIP availability require care in time comparisons. Historical p-values are descriptive and do not account for spatial or repeated-observation dependence.
 
@@ -85,17 +87,25 @@ Read notebooks in this order:
 1. `Housing_Data_Cleaning.ipynb` — housing raw data, EDA and cleaning.
 2. `Transport_Data_Cleaning.ipynb` — recovered transportation source, EDA, exclusions and reproducible cleaning.
 3. `dataEngP3.ipynb` — Malak's integration and RQ5–RQ6.
-4. `Person1_Research_Questions.ipynb`, `Person2_Research_Questions.ipynb`, `RQ7_RQ8_Research_Questions.ipynb`, `Person5_Research_Questions.ipynb` — RQ1–RQ4 and RQ7–RQ10.
+4. `Person1_Research_Questions.ipynb`, `Person2_Research_Questions.ipynb`, `RQ7_RQ8_Research_Questions.ipynb`, `Person5_Research_Questions.ipynb`, `Person6_Research_Questions.ipynb` — RQ1–RQ4 and RQ7–RQ12.
 
 Website: `app/app.py`, `app/data_loader.py`, `app/charts/`, `app/assets/style.css`. Automated checks: `tests/`. [AI_PROMPTS.md](docs/AI_PROMPTS.md) preserves the existing prompt record and identifies audit assistance.
 
-## Deployment status
+## Deployment
 
-No deployed URL was verified in this audit. For a Linux service such as Render:
+**Live website:** _LIVE_URL_PENDING_
 
-```text
-Build: pip install -r requirements.txt
-Start: gunicorn --chdir app app:server --bind 0.0.0.0:$PORT
-```
+The app is deployed on [Render](https://render.com) (free plan) using `render.yaml` in the repository root:
 
-Include the integrated CSV and map coordinates in the deployment. Use `python app/app.py` for Windows development. Lama's final check should test the live filters, search, report and map, then record the verified URL here.
+1. Sign in to Render with GitHub and allow access to this repository.
+2. **New → Blueprint**, choose this repository, and confirm. Render reads `render.yaml`, which sets:
+   ```text
+   Build: pip install -r requirements.txt
+   Start: gunicorn --chdir app app:server --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+   Python: 3.12.8
+   ```
+3. Wait for the build log to show `Booting worker`, then open the `onrender.com` URL.
+
+`df_integrated.csv` and `data/zip_centroids.csv` are committed, so no data download happens at deploy time. The free plan sleeps after inactivity, so the first visit can take about a minute to wake up. Use `python app/app.py` for local development on Windows.
+
+**Deployment checks** (repeat on the live URL before submission): the page loads with all 12 numbered charts; the map shows a basemap; searching `Bronx 2023 2025 severe` updates the filters and summary; changing the transportation dropdown to *Fatalities* and clicking **Generate Report** updates the summary and charts; searching an unknown ZIP (`99999`) shows a warning without changing the report.

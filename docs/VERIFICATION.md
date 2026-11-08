@@ -14,11 +14,11 @@ versions in `requirements-analysis.txt`. The operating system was Windows.
 | Saved artifacts | Executed notebooks refreshed; four PNG figures regenerated and visually reviewed. |
 | Browser HTTP and JavaScript | Local dashboard returns HTTP 200; no uncaught page errors observed. |
 | Browser report interaction | Search by borough/year, both measure dropdowns, Generate Report, unsupported-ZIP rejection and single-ZIP selection passed. |
-| Browser charts | Twelve numbered figure containers render; RQ1–RQ10 are implemented; RQ11–RQ12 intentionally remain Person 6 placeholders. Separate selected-measures explorer updates both axes. |
+| Browser charts | Twelve numbered figure containers render; RQ1–RQ12 are implemented (RQ11–RQ12 added November 8). Separate selected-measures explorer updates both axes. |
 | Mobile layout | 390-pixel viewport has 390-pixel document width; no horizontal overflow. |
 | Map and trend visual review | Real basemap and data markers render; annual trend spacing reviewed and corrected. |
 | Whitespace check | `git diff --check` passes. |
-| Production deployment | Not performed or verified; no live URL certified. |
+| Production deployment | `render.yaml` added; gunicorn start command verified locally (HTTP 200). Live URL: see README once deployed and tested. |
 
 Fresh notebook code-cell counts: housing cleaning 27, transportation cleaning 5,
 integration 9, Person 1 research 8, Person 2 research 3, Person 4 research 10,
@@ -40,3 +40,13 @@ local run does not verify a production deployment.
 The checks support correctness of the recorded transformations and tested
 interactions. They do not remove the source geography omissions, unknown unit
 counts, borough conventions or selection bias documented in `PROJECT_REVIEW.md`.
+
+## Person 6 checks (November 8, 2026, Linux, Python 3.12)
+
+| Check | Observed result |
+| --- | --- |
+| Regression suite | **29 tests passed** (25 existing + 4 for RQ11/RQ12). |
+| Fresh notebook kernels | `scripts/check_notebooks.py`: **8 notebooks passed**, including `Person6_Research_Questions.ipynb` (13 code cells). Its final cell confirms the website's RQ11/RQ12 functions reproduce the notebook values. |
+| Production server | `gunicorn --chdir app app:server` (Render's start command) serves HTTP 200 and the Dash layout. |
+| Browser end-to-end (headless Chrome against gunicorn) | 12 chart cards, no chart errors. Initial summary 112,688 units / 5,881 crashes / 143 ZIPs. Search `Bronx 2023 2025 severe` → 27,160 units, 1,200 severe injuries, 22 ZIPs; RQ11 regrouped (8/3/3/8) and RQ12 showed only the Bronx (ρ = 0.57, n = 22). Transportation dropdown → Fatalities + Generate Report → 393 fatalities; RQ11/RQ12 axes switched to fatalities. Unknown ZIP `99999` rejected with a warning. |
+| Map basemap | Not verifiable in the sandbox (the basemap host is blocked there); must be checked on the live URL. |
