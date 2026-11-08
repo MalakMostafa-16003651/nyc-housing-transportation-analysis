@@ -50,3 +50,13 @@ counts, borough conventions or selection bias documented in `PROJECT_REVIEW.md`.
 | Production server | `gunicorn --chdir app app:server` (Render's start command) serves HTTP 200 and the Dash layout. |
 | Browser end-to-end (headless Chrome against gunicorn) | 12 chart cards, no chart errors. Initial summary 112,688 units / 5,881 crashes / 143 ZIPs. Search `Bronx 2023 2025 severe` → 27,160 units, 1,200 severe injuries, 22 ZIPs; RQ11 regrouped (8/3/3/8) and RQ12 showed only the Bronx (ρ = 0.57, n = 22). Transportation dropdown → Fatalities + Generate Report → 393 fatalities; RQ11/RQ12 axes switched to fatalities. Unknown ZIP `99999` rejected with a warning. |
 | Map basemap | Not verifiable in the sandbox (the basemap host is blocked there); must be checked on the live URL. |
+
+## Final six-person recheck (November 8, 2026, Windows, Python 3.12.14)
+
+- All 29 regression tests passed in 53.949 seconds.
+- All eight notebooks executed in fresh kernels: 27 + 5 + 9 + 8 + 3 + 10 + 11 + 13 = 86 code cells.
+- Local Chrome checks passed: HTTP 200, twelve real research chart cards, no uncaught page errors, borough/year search, both measure selectors, Generate Report, invalid-ZIP rejection and single-ZIP selection.
+- The 390-pixel mobile viewport had 390-pixel document width (no horizontal overflow).
+- The actual map basemap/markers and both Person 6 chart layouts were visually inspected in Chrome. This verifies local rendering, not a public deployment.
+- Render Blueprint fields were checked against the official Blueprint reference. No authenticated Render build or live service URL was verified in this recheck. The README's prior statement that the app was deployed was corrected.
+- See SUBMISSION_CHECKLIST.md for the full requirement matrix and submission package. Deployment/live URL verification is the remaining open requirement in the supplied brief.

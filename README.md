@@ -65,7 +65,7 @@ python app/app.py
 
 Open [the local dashboard](http://127.0.0.1:8050). Keep `df_integrated.csv` in the repository root. Missing/invalid data produces an explicit error instead of synthetic results.
 
-Choose boroughs, ZIPs, years and housing/transport measures, then click **Generate Report**. Search examples: `Brooklyn 2023 2025 severe`, `11212 fatalities`. Summary totals and the selected-measures explorer follow both measure selectors. Research charts preserve the measures named in their questions; RQ8 also supports the selected transport measure with a matching title. Geography/year filters apply throughout, with messages when a chart needs more data. RQ10 uses 2023–2025 only. Generate Report refreshes the on-screen report; it does not download a PDF.
+Choose boroughs, ZIPs, years and housing/transport measures, then click **Generate Report**. Search examples: `Brooklyn 2023 2025 severe`, `11212 fatalities`. Summary totals and the selected-measures explorer follow both measure selectors. Research charts preserve the measures named in their questions; RQ8 also supports the selected transport measure with a matching title, and RQ11/RQ12 follow both selected measures. Geography/year filters apply throughout, with messages when a chart needs more data. RQ10 uses 2023–2025 only. Generate Report refreshes the on-screen report; it does not download a PDF.
 
 ## Analysis and verification
 
@@ -95,7 +95,7 @@ Website: `app/app.py`, `app/data_loader.py`, `app/charts/`, `app/assets/style.cs
 
 **Live website:** _LIVE_URL_PENDING_
 
-The app is deployed on [Render](https://render.com) (free plan) using `render.yaml` in the repository root:
+**Status: deployment configured, public deployment not yet verified.** Use [Render](https://render.com) with `render.yaml` in the repository root. A configuration file is not evidence of a live deployment.
 
 1. Sign in to Render with GitHub and allow access to this repository.
 2. **New → Blueprint**, choose this repository, and confirm. Render reads `render.yaml`, which sets:
@@ -109,3 +109,9 @@ The app is deployed on [Render](https://render.com) (free plan) using `render.ya
 `df_integrated.csv` and `data/zip_centroids.csv` are committed, so no data download happens at deploy time. The free plan sleeps after inactivity, so the first visit can take about a minute to wake up. Use `python app/app.py` for local development on Windows.
 
 **Deployment checks** (repeat on the live URL before submission): the page loads with all 12 numbered charts; the map shows a basemap; searching `Bronx 2023 2025 severe` updates the filters and summary; changing the transportation dropdown to *Fatalities* and clicking **Generate Report** updates the summary and charts; searching an unknown ZIP (`99999`) shows a warning without changing the report.
+
+## Submission package and final status
+
+The November 8 final audit passed **29 regression tests** and **all eight notebooks (86 code cells)**, including Lama's RQ11/RQ12. See [the submission checklist](docs/SUBMISSION_CHECKLIST.md) for requirement-by-requirement evidence and exactly what to submit.
+
+Submit the GitHub repository link, all eight analysis notebooks (or the single combined notebook if your course explicitly requires one), source/cleaned/aggregated/integrated CSVs with provenance, website source and requirements, this README with team contributions, and the **working public website URL**. The repository contains the code/data deliverables; the public URL must be deployed, tested, and recorded above before the website/deployment requirement is complete. Additional report, slide, video or upload-format requirements must be checked against the course's official submission rubric, which was not supplied here.

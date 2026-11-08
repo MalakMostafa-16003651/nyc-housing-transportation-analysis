@@ -13,7 +13,8 @@ years, a ZIP matched in all five years looks "high" on BOTH housing and crashes
 simply because it has more years of data. In the full matched sample, summed
 affordable units and summed serious crashes each correlate strongly with the
 number of matched years (Spearman 0.76 and 0.80). Averaging per matched year
-removes that coverage effect, so the charts compare ZIPs on equal footing.
+reduces the direct effect of differing observation durations. It does not remove
+selection bias or make the observed calendar periods identical across ZIPs.
 """
 
 import numpy as np

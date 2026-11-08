@@ -65,7 +65,7 @@ python scripts/check_notebooks.py
 ```
 
 The notebook checker verifies raw SHA-256 hashes, copies the source/data/modules
-into an isolated temporary directory, and executes all seven notebooks with fresh
+into an isolated temporary directory, and executes all eight notebooks with fresh
 kernels. Optional `--write-executed` refreshes checked-in notebook outputs and four
 static figures only after all notebooks pass; it does not replace source CSVs.
 The regression suite checks actual data, independent aggregation, source cleaning,
@@ -97,3 +97,8 @@ Repairs are prepared on `codex/project-audit-persons-1-5`. Review source changes
 run the checks above, then merge the reviewed branch. The integrated values were
 preserved; audit files, reproducible raw inputs and corrected figures accompany
 the code and documentation.
+
+
+## Final six-person recheck (November 8, 2026)
+
+All 29 regression tests and all eight notebooks (86 code cells) passed. RQ11/RQ12 are present and tested; they are no longer pending. Local browser checks passed. Public deployment remains unverified; a Render configuration is not a live URL. See SUBMISSION_CHECKLIST.md for the requirement matrix and submission contents. The Persons 1–5 repair PR was already merged; this follow-up documents the completed six-person codebase.
