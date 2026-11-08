@@ -97,18 +97,32 @@ Website: `app/app.py`, `app/data_loader.py`, `app/charts/`, `app/assets/style.cs
 
 **Status: deployed on PythonAnywhere and live browser checks passed on November 8, 2026.** Verified HTTP 200, all twelve research charts, map basemap/markers, borough/year and ZIP searches, both measure selectors, Generate Report, invalid-ZIP feedback, and mobile layout after charts resize. No uncaught JavaScript errors were observed. Initial totals match the reviewed integrated dataset: 112,688 affordable units, 5,881 serious crashes and 143 ZIPs. See [verification evidence](docs/VERIFICATION.md).
 
-The following Render instructions are an **alternative hosting route**, not the current deployment. No Render connection is needed to use the working PythonAnywhere site.
+### How the live site was deployed (PythonAnywhere)
 
-1. Sign in to Render with GitHub and allow access to this repository.
-2. **New → Blueprint**, choose this repository, and confirm. Render reads `render.yaml`, which sets:
-   ```text
-   Build: pip install -r requirements.txt
-   Start: gunicorn --chdir app app:server --bind 0.0.0.0:$PORT --workers 2 --timeout 120
-   Python: 3.12.8
+We used a free PythonAnywhere Beginner account (no payment card needed, and the site does not sleep). Render was tried first, but its free plan asked for a payment card.
+
+1. In a PythonAnywhere **Bash console**:
+   ```bash
+   git clone https://github.com/MalakMostafa-16003651/nyc-housing-transportation-analysis.git
+   mkvirtualenv nycenv --python=python3.12
+   pip install --no-cache-dir -r nyc-housing-transportation-analysis/requirements.txt
    ```
-3. Wait for the build log to show `Booting worker`, then open the `onrender.com` URL.
+2. **Web tab → Add a new web app → Manual configuration → Python 3.12**, then set **Virtualenv** to `nycenv`.
+3. Replace the WSGI configuration file with:
+   ```python
+   import sys
+   sys.path.insert(0, "/home/nychousingsafety/nyc-housing-transportation-analysis/app")
+   from app import server as application
+   ```
+4. Click **Reload** on the Web tab.
 
-`df_integrated.csv` and `data/zip_centroids.csv` are committed, so no live source-data download is required by the app. Use `python app/app.py` for local development on Windows. The Render Blueprint is optional; it does not describe PythonAnywhere's server configuration.
+**Updating the live site:** after changes are pushed to GitHub, run `cd nyc-housing-transportation-analysis && git pull` in a Bash console, then click **Reload**.
+
+`df_integrated.csv` and `data/zip_centroids.csv` are committed, so the app needs no live data download. For local development, run `python app/app.py`.
+
+### Alternative: Render
+
+`render.yaml` is included as an optional second hosting route; it is not the current deployment. On Render, create a web service from this repository with build command `pip install -r requirements.txt` and start command `gunicorn --chdir app app:server --bind 0.0.0.0:$PORT --workers 2 --timeout 120` (Python 3.12.8). Render's free plan may require a payment card.
 
 **Deployment checks** (repeat on the live URL before submission): the page loads with all 12 numbered charts; the map shows a basemap; searching `Bronx 2023 2025 severe` updates the filters and summary; changing the transportation dropdown to *Fatalities* and clicking **Generate Report** updates the summary and charts; searching an unknown ZIP (`99999`) shows a warning without changing the report.
 
