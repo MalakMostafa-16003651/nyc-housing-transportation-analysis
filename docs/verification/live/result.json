@@ -1,0 +1,13 @@
+{
+  "httpStatus": 200,
+  "initialSummary": "112,688Affordable units5,881Serious crashes143ZIP codes2022-2026Years",
+  "filteredSummary": "27,859Affordable units1,921Severe injuries37ZIP codes2023-2025Years",
+  "measureSummary": "741Housing buildings137Fatalities37ZIP codes2023-2025Years",
+  "graphCount": 12,
+  "pageErrors": [],
+  "mobile": {
+    "width": 390,
+    "documentWidth": 390,
+    "offenders": []
+  }
+}

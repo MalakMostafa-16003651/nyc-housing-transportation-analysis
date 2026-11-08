@@ -23,7 +23,7 @@ report, slide, student-ID, video or single-notebook requirement is inferred.
 | Person 5: RQ9 overlap map and RQ10 annual comparison | Implemented. RQ10 uses common ZIPs across selected interior years; boundary years and geographic selection are disclosed. |
 | Person 6 / Lama: RQ11 categorized scatter and RQ12 borough-colored scatter | Implemented in `Person6_Research_Questions.ipynb` and website; per-matched-year means, thresholds, correlations and limitations documented. |
 | Person 6: repository organization, README, member contributions, cleaning/integration documentation, full notebook and website testing | Present; all 29 regression tests and all eight fresh-kernel notebook runs passed in the final audit. Local browser interaction checks passed. |
-| Person 6: deploy website and verify live URL | **Not yet verified.** `render.yaml` is configured; README still needs a real tested public URL. This requirement is not complete merely because code is merged. |
+| Person 6: deploy website and verify live URL | **Verified November 8, 2026:** https://nychousingsafety.pythonanywhere.com/ passed live browser interaction, chart/map and mobile checks. README records the URL. Render remains an optional alternative. |
 
 ## What to submit
 
@@ -46,7 +46,15 @@ report, slide, student-ID, video or single-notebook requirement is inferred.
    as one combined notebook, a written report, slides, a video or a specific ZIP
    upload structure. Confirm these externally; they were not in the supplied brief.
 
-## Deployment route
+## Verified public deployment
+
+Submit [the live PythonAnywhere website](https://nychousingsafety.pythonanywhere.com/).
+Live HTTP, twelve research charts, the map basemap/markers, geographic searches,
+both measure selectors, Generate Report, invalid ZIP rejection and mobile layout
+were verified November 8, 2026. The deployment requirement is complete for the
+tested site. Recheck the URL before submitting, since hosted services can change.
+
+## Optional alternative deployment route
 
 Use the repository's Render Blueprint (`render.yaml`). In Render, create a
 Blueprint from this GitHub repository and deploy the selected final branch.
@@ -60,7 +68,8 @@ After deployment, verify the URL loads, all twelve charts render, map tiles and
 markers appear, borough/year/ZIP searches update the report, both measure selectors
 work, an invalid ZIP preserves the report with feedback, and empty selections are
 handled. Record the URL and date, then replace `LIVE_URL_PENDING` in the README.
-The Render connection is required for the assistant to deploy through your account.
+These Render instructions are only for an alternative deployment; no Render
+connection is required for the existing verified PythonAnywhere service.
 
 ## Interpretation that must stay with the submission
 

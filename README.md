@@ -34,7 +34,7 @@ Assignments and names were supplied by the team. File evidence and checks establ
 | 3 | **Malak** | **ZIP/year aggregation, integration, validation and post-merge cleaning** | RQ5: ZIPs high in housing and crashes (scatter). RQ6: top 10 crash-to-affordable-unit ratios (bar). |
 | 4 | Ahmed | Website, filters, search and Generate Report | RQ7: buildings vs severe injuries (scatter). RQ8: crashes per project by borough (bar). |
 | 5 | Kenzy | Chart consistency, map and story | RQ9: high-housing/high-crash overlap (map). RQ10: annual housing vs severe injuries (line/scatter analysis). |
-| 6 | Lama | Final documentation, testing and deployment | RQ11: ZIPs with high housing but poor road safety (categorized scatter). RQ12: does the housing–crash link differ by borough (borough-coloured scatter + correlation chart). README, testing (notebook checks, unit tests, browser end-to-end checks) and Render deployment. |
+| 6 | Lama | Final documentation, testing and deployment | RQ11: ZIPs with high housing but poor road safety (categorized scatter). RQ12: does the housing–crash link differ by borough (borough-coloured scatter + correlation chart). README, testing (notebook checks, unit tests, browser end-to-end checks) and PythonAnywhere deployment (optional Render Blueprint included). |
 
 ## Findings and limitations
 
@@ -93,9 +93,11 @@ Website: `app/app.py`, `app/data_loader.py`, `app/charts/`, `app/assets/style.cs
 
 ## Deployment
 
-**Live website:** _LIVE_URL_PENDING_
+**Live website:** [NYC Housing & Road Safety](https://nychousingsafety.pythonanywhere.com/)
 
-**Status: deployment configured, public deployment not yet verified.** Use [Render](https://render.com) with `render.yaml` in the repository root. A configuration file is not evidence of a live deployment.
+**Status: deployed on PythonAnywhere and live browser checks passed on November 8, 2026.** Verified HTTP 200, all twelve research charts, map basemap/markers, borough/year and ZIP searches, both measure selectors, Generate Report, invalid-ZIP feedback, and mobile layout after charts resize. No uncaught JavaScript errors were observed. Initial totals match the reviewed integrated dataset: 112,688 affordable units, 5,881 serious crashes and 143 ZIPs. See [verification evidence](docs/VERIFICATION.md).
+
+The following Render instructions are an **alternative hosting route**, not the current deployment. No Render connection is needed to use the working PythonAnywhere site.
 
 1. Sign in to Render with GitHub and allow access to this repository.
 2. **New → Blueprint**, choose this repository, and confirm. Render reads `render.yaml`, which sets:
@@ -106,7 +108,7 @@ Website: `app/app.py`, `app/data_loader.py`, `app/charts/`, `app/assets/style.cs
    ```
 3. Wait for the build log to show `Booting worker`, then open the `onrender.com` URL.
 
-`df_integrated.csv` and `data/zip_centroids.csv` are committed, so no data download happens at deploy time. The free plan sleeps after inactivity, so the first visit can take about a minute to wake up. Use `python app/app.py` for local development on Windows.
+`df_integrated.csv` and `data/zip_centroids.csv` are committed, so no live source-data download is required by the app. Use `python app/app.py` for local development on Windows. The Render Blueprint is optional; it does not describe PythonAnywhere's server configuration.
 
 **Deployment checks** (repeat on the live URL before submission): the page loads with all 12 numbered charts; the map shows a basemap; searching `Bronx 2023 2025 severe` updates the filters and summary; changing the transportation dropdown to *Fatalities* and clicking **Generate Report** updates the summary and charts; searching an unknown ZIP (`99999`) shows a warning without changing the report.
 
@@ -114,4 +116,4 @@ Website: `app/app.py`, `app/data_loader.py`, `app/charts/`, `app/assets/style.cs
 
 The November 8 final audit passed **29 regression tests** and **all eight notebooks (86 code cells)**, including Lama's RQ11/RQ12. See [the submission checklist](docs/SUBMISSION_CHECKLIST.md) for requirement-by-requirement evidence and exactly what to submit.
 
-Submit the GitHub repository link, all eight analysis notebooks (or the single combined notebook if your course explicitly requires one), source/cleaned/aggregated/integrated CSVs with provenance, website source and requirements, this README with team contributions, and the **working public website URL**. The repository contains the code/data deliverables; the public URL must be deployed, tested, and recorded above before the website/deployment requirement is complete. Additional report, slide, video or upload-format requirements must be checked against the course's official submission rubric, which was not supplied here.
+Submit the GitHub repository link, all eight analysis notebooks (or the single combined notebook if your course explicitly requires one), source/cleaned/aggregated/integrated CSVs with provenance, website source and requirements, this README with team contributions, and the **working public website URL above**. The code/data and live deployment requirements in the supplied six-person brief have now been checked. Additional report, slide, video or upload-format requirements must be checked against the course's official submission rubric, which was not supplied here.

@@ -60,3 +60,17 @@ counts, borough conventions or selection bias documented in `PROJECT_REVIEW.md`.
 - The actual map basemap/markers and both Person 6 chart layouts were visually inspected in Chrome. This verifies local rendering, not a public deployment.
 - Render Blueprint fields were checked against the official Blueprint reference. No authenticated Render build or live service URL was verified in this recheck. The README's prior statement that the app was deployed was corrected.
 - See SUBMISSION_CHECKLIST.md for the full requirement matrix and submission package. Deployment/live URL verification is the remaining open requirement in the supplied brief.
+
+## Public PythonAnywhere verification — November 8, 2026
+
+URL: https://nychousingsafety.pythonanywhere.com/
+
+- HTTP 200; all 12 numbered research figures rendered without chart-error panels.
+- Initial summary: 112,688 affordable units / 5,881 serious crashes / 143 ZIPs.
+- Brooklyn 2023–2025 severe search: 27,859 units / 1,921 severe injuries / 37 ZIPs.
+- Selecting Housing buildings and Fatalities, then Generate Report: 741 buildings / 137 fatalities for that selection; explorer axes updated.
+- Unknown ZIP99999 was rejected without changing the report; single ZIP11212/2023 selection worked.
+- No uncaught JavaScript page errors observed. The real basemap and data markers, RQ11 and RQ12 were visually inspected.
+- At 390px viewport, document width settled to 390px after chart resize, with no overflowing elements. An initial check at500ms caught transient old chart widths; the repeated check after resizing completed passed.
+- Deployment/live-URL requirement is now verified. This supersedes earlier pending-deployment statements in the historical audit entries.
+- Live screenshots and structured browser results are stored in docs/verification/live/.

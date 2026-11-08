@@ -102,3 +102,7 @@ the code and documentation.
 ## Final six-person recheck (November 8, 2026)
 
 All 29 regression tests and all eight notebooks (86 code cells) passed. RQ11/RQ12 are present and tested; they are no longer pending. Local browser checks passed. Public deployment remains unverified; a Render configuration is not a live URL. See SUBMISSION_CHECKLIST.md for the requirement matrix and submission contents. The Persons 1–5 repair PR was already merged; this follow-up documents the completed six-person codebase.
+
+## Deployment completion — November 8, 2026
+
+The user supplied https://nychousingsafety.pythonanywhere.com/. Live browser checks passed for HTTP200, all12charts, real map tiles/markers, geographic search, both measure selectors, Generate Report, invalid ZIPfeedback and mobile layout after resize. The public deployment requirement is now verified; the previous missing-URL statement describes the earlier audit state. See VERIFICATION.md and SUBMISSION_CHECKLIST.md. All requirements in the supplied six-person brief now have implementation and verification evidence, subject to the documented data limitations and any separate course-specific submission rubric.
