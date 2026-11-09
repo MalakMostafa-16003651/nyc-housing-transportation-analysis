@@ -74,3 +74,19 @@ URL: https://nychousingsafety.pythonanywhere.com/
 - At 390px viewport, document width settled to 390px after chart resize, with no overflowing elements. An initial check at500ms caught transient old chart widths; the repeated check after resizing completed passed.
 - Deployment/live-URL requirement is now verified. This supersedes earlier pending-deployment statements in the historical audit entries.
 - Live screenshots and structured browser results are stored in docs/verification/live/.
+
+## Email-submission recheck — November 9, 2026
+
+The latest main branch was retrieved before testing. All 29 regression tests passed
+in 45.197 seconds. All eight notebooks ran in fresh isolated kernels (86 code
+cells), with raw snapshot hashes verified. Fresh executed copies were retained for
+the email attachment; source data and computations were preserved.
+
+The public PythonAnywhere site passed HTTP200, twelve real research figures,
+borough/year search, both measure selectors, Generate Report, invalid-ZIP
+rejection and single-ZIP selection. No uncaught page errors were observed. The
+390px mobile viewport settled to390px document width with no overflowing elements.
+Map tiles/markers and chart screenshots were rechecked. The documented six-person
+brief has corresponding files and test evidence; no additional course rubric was
+provided. A report, slides, student IDs or a single combined notebook should only
+be added if the lecturer separately requires them.

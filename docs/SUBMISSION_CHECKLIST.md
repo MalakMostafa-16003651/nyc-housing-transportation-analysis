@@ -67,7 +67,7 @@ authenticated Render build or a Linux production run.
 After deployment, verify the URL loads, all twelve charts render, map tiles and
 markers appear, borough/year/ZIP searches update the report, both measure selectors
 work, an invalid ZIP preserves the report with feedback, and empty selections are
-handled. Record the URL and date, then replace `LIVE_URL_PENDING` in the README.
+handled. If using an alternative deployment, record its verified URL and date in the README.
 These Render instructions are only for an alternative deployment; no Render
 connection is required for the existing verified PythonAnywhere service.
 

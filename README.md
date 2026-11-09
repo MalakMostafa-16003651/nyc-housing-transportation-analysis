@@ -128,6 +128,6 @@ We used a free PythonAnywhere Beginner account (no payment card needed, and the 
 
 ## Submission package and final status
 
-The November 8 final audit passed **29 regression tests** and **all eight notebooks (86 code cells)**, including Lama's RQ11/RQ12. See [the submission checklist](docs/SUBMISSION_CHECKLIST.md) for requirement-by-requirement evidence and exactly what to submit.
+The November 9 final recheck passed **29 regression tests** and **all eight notebooks (86 code cells)**, including Lama's RQ11/RQ12. See [the submission checklist](docs/SUBMISSION_CHECKLIST.md) for requirement-by-requirement evidence and exactly what to submit.
 
 Submit the GitHub repository link, all eight analysis notebooks (or the single combined notebook if your course explicitly requires one), source/cleaned/aggregated/integrated CSVs with provenance, website source and requirements, this README with team contributions, and the **working public website URL above**. The code/data and live deployment requirements in the supplied six-person brief have now been checked. Additional report, slide, video or upload-format requirements must be checked against the course's official submission rubric, which was not supplied here.
